@@ -31,7 +31,7 @@
 //
 // ==/UserScript==
 
-// TODO: Still needs a lot of cleanup. 
+// TODO: Still needs a lot of cleanup.
 // Replace jQ with just $ now that noConflict is not needed anymore and try to simplify the logic.
 
 ((jQ) => {
@@ -40,7 +40,7 @@
     console.log(jQ);
     return;
   }
-        
+
   if (jQ('.achievements').length === 0) {
     // Either not on the main profile page, or something is going south right now
     return;
@@ -190,13 +190,13 @@
     memberDaysCount:    [0,   30.43680,   91.31050,  182.62110,  365.24220,  730.48440,
                             1460.96880, 2556.69540, 3652.42200, 3652.42200]
   };
-    
+
   let normTime = (float_num) => {
     var d = Math.floor(float_num);
     var h = Math.round((float_num - d) * 24);
     return d + "d " + h + "h";
   }
-  
+
   let normAge = (float_num) => {
     var d = Math.floor(float_num);
     var h = Math.round(float_num - d);
@@ -211,29 +211,24 @@
   let linkSearch = (str) => {
     return '/perl-bin/animedb.pl?show=animelist&adb.search=' + str + '&do.search=search';
   }
-  
+
   let linkRel = (id) => {
     return '/perl-bin/animedb.pl?show=rel&aid=' + id;
   }
-  
+
   let linkTag = (id) => {
     return '/t' + id;
   }
-  
+
   let linkCreator = (id) => {
     return '/cr' + id;
   }
-  
+
   let getPlainText = (el) => {
     let wrapped = $('<div>' + el.html() + '</div>');
     wrapped.find('*').remove();
     return wrapped.html().trim();
   }
-
-  // Fix inconsistency with special badges.
-  jQ('.achievements .content > h3').each(function() {
-    jQ(this).next('.badges').prepend(this);
-  });
 
   let originalHTML = "";
   jQ('.achievements .container .container').each(function() {
@@ -242,7 +237,7 @@
 
   jQ('.badge').each(function() {
     let badge = jQ(this);
-      
+
     let str = this.title;
     let name = str.match(/^(.+?)( \[| \(|$)/);
     let level = str.match(/Level (\d+)/);
@@ -256,7 +251,7 @@
       var numbers = str.match(/(\d+) of (\d+)/);
       for (let i = 1; i < 9; i++) {
         // Based on empirical results, the badge granting thresholds are actually at 10.5%, 21.5%, ...
-        // Internally, my guess is that the system calculates progress divided by max, 
+        // My guess is that internally the system calculates progress divided by max,
         // then rounds that value to nearest integer, and finally compares to 11%, 12%, ..., 100%.
         steps[i] = Math.ceil((0.11 * i - 0.005) * numbers[2]);
       }
@@ -286,7 +281,7 @@
       if (badge.is('.sazae'))            { link = "/a1830"; }
       if (badge.is('.slayers'))          { link = linkSearch('slayers'); }
       if (badge.is('.tenchi_muyou'))     { link = linkSearch('tenchi+muyou'); }
-      
+
       if (badge.is('.adachimitsuru'))    { link = linkCreator(859); }
       if (badge.is('.clamp'))            { link = linkCreator(747); }
       if (badge.is('.ghibli'))           { link = linkCreator(729); }
@@ -294,16 +289,16 @@
       if (badge.is('.nagai_gou'))        { link = linkCreator(868); }
       if (badge.is('.takahashi_rumiko')) { link = linkCreator(818); }
       if (badge.is('.tezuka_osamu'))     { link = linkCreator(1195); }
-      
+
       // 14.04.2012
       if (badge.is('.jewelpet'))         { link = linkSearch('jewelpet'); }
       if (badge.is('.studio4c'))         { link = linkCreator(738); }
-      
+
       // 12.10.2012
       if (badge.is('.beyblade'))         { link = linkSearch('beyblade'); }
       if (badge.is('.princeoftennis'))   { link = linkSearch('tennis+no+ouji-sama'); }
       if (badge.is('.yugioh'))           { link = linkRel(2061); }
-      
+
       // 23.02.2013
       if (badge.is('.major'))            { link = linkRel(2168); }
       if (badge.is('.evangelion'))       { link = linkSearch('evangelion'); }
@@ -311,29 +306,29 @@
       if (badge.is('.key'))              { link = linkCreator(1046); }
       if (badge.is('.kyotoanimation'))   { link = linkCreator(736); }
       if (badge.is('.typemoon'))         { link = linkCreator(927); }
-      
+
       // 02.03.2013
       if (badge.is('.gits'))             { link = linkSearch('koukaku+kidoutai'); }
       if (badge.is('.hxh'))              { link = linkSearch('hunter+x+hunter'); }
       if (badge.is('.fukumotonobuyuki')) { link = linkCreator(9107); }
       if (badge.is('.urasawanaoki'))     { link = linkCreator(875); }
-      
+
       // 15.04.2013
       if (badge.is('.tsubasa'))          { link = linkSearch('captain+tsubasa'); }
       if (badge.is('.gintama'))          { link = linkSearch('gintama'); }
       if (badge.is('.hack'))             { link = linkSearch('.hack'); }
       if (badge.is('.orangeroad'))       { link = linkSearch('orange+road'); }
       if (badge.is('.seikai'))           { link = linkRel(1); }
-      
+
       // 24.08.2014
       if (badge.is('.initiald'))         { link = linkSearch('initial+d'); }
-      
+
       // 15.12.2014
       if (badge.is('.aria'))             { link = linkRel(2659); }
       if (badge.is('.fma'))              { link = linkSearch('hagane+no+renkinjutsushi'); }
       if (badge.is('.ippo'))             { link = linkSearch('hajime+no+ippo'); }
       if (badge.is('.kenshin'))          { link = linkSearch('kenshin'); }
-      
+
       // 22.04.2017
       if (badge.is('.nagao_takena'))     { link = linkCreator(29357); }
     } else {
@@ -345,7 +340,7 @@
       } else {
         date = date[1];
         level = parseInt(level[1]);
-          
+
         if (badge.is('.mylist.animecount')) {
           let a = getPlainText(jQ('.stats_mylist .acnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
@@ -439,7 +434,7 @@
         }
       }
     }
-      
+
     let curlv_min = steps[level];
     let curlv_max = steps[level + 1];
     let curlv_p = 0;
@@ -448,7 +443,7 @@
     } else {
       curlv_p = Math.max(0, Math.min(1, (numbers[1] - curlv_min) / (curlv_max - curlv_min)));
     }
-    
+
     badge.removeClass("level1 level2 level3 level4 level5 level6 level7 level8 level9").addClass("swebb_badge-small");
     badge.wrap('<div class="swebb_badge-bar-container" />');
 
@@ -482,7 +477,7 @@
         la = '<a href="' + link + '">';
         lb = '</a>';
     }
-      
+
     badge.after(`<div
       class="swebb_badge-bar${isMax ? " swebb_max" : ""}">
         <div class="swebb_bar" style="width: ${curlv_p * 200}px;">&nbsp;</div>
@@ -511,7 +506,7 @@
 
   // Collapse the badge boxes by default
   jQ('.swebb_badgebox').hide();
-    
+
   // Bind click events to enable expanding/collapsing of badge boxes
   jQ('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
     jQ(this).next().slideToggle('fast');

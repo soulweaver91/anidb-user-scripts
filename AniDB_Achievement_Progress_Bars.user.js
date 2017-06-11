@@ -31,17 +31,16 @@
 //
 // ==/UserScript==
 
-// TODO: Still needs a lot of cleanup.
-// Replace jQ with just $ now that noConflict is not needed anymore and try to simplify the logic.
+// TODO: Still needs a lot of cleanup and logic simplification.
 
-((jQ) => {
-  if (!jQ) {
+(($) => {
+  if (!$) {
     console.error("Failed to load achievement progress bars script!");
-    console.log(jQ);
+    console.log($);
     return;
   }
 
-  if (jQ('.achievements').length === 0) {
+  if ($('.achievements').length === 0) {
     // Either not on the main profile page, or something is going south right now
     return;
   }
@@ -50,7 +49,7 @@
   // There is a GreaseMonkey native function for this (GM_addStyle) but if @grant is anything but none,
   // the jQuery obtained from unsafeWindow breaks (specifically, cannot handle jQ(...).each() anymore),
   // and it is nicer to not need to ship our own copy of it.
-  jQ('head link[title="Style"]').after(`<style type="text/css" id="swebb_style">
+  $('head link[title="Style"]').after(`<style type="text/css" id="swebb_style">
   /* Style definitions for Soulweaver's Experimental Badge Bars */
   .swebb_badge-bar-container {
     display: inline-block;
@@ -231,12 +230,12 @@
   }
 
   let originalHTML = "";
-  jQ('.achievements .container .container').each(function() {
-    originalHTML += jQ(this).html();
+  $('.achievements .container .container').each(function() {
+    originalHTML += $(this).html();
   });
 
-  jQ('.badge').each(function() {
-    let badge = jQ(this);
+  $('.badge').each(function() {
+    let badge = $(this);
 
     let str = this.title;
     let name = str.match(/^(.+?)( \[| \(|$)/);
@@ -342,27 +341,27 @@
         level = parseInt(level[1]);
 
         if (badge.is('.mylist.animecount')) {
-          let a = getPlainText(jQ('.stats_mylist .acnt .value'));
+          let a = getPlainText($('.stats_mylist .acnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.animeCount;
         }
         if (badge.is('.mylist.episodecount')) {
-          let a = getPlainText(jQ('.stats_mylist .ecnt .value'));
+          let a = getPlainText($('.stats_mylist .ecnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.episodeCount;
         }
         if (badge.is('.mylist.seenepisodes')) {
-          let a = getPlainText(jQ('.stats_mylist .watched.count .value'));
+          let a = getPlainText($('.stats_mylist .watched.count .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.episodeCount;
         }
         if (badge.is('.mylist.filecount')) {
-          let a = getPlainText(jQ('.stats_mylist .fcnt .value'));
+          let a = getPlainText($('.stats_mylist .fcnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.episodeCount;
         }
         if (badge.is('.mylist.mylistsize')) {
-          let a = jQ('.stats_mylist .size .value').html().match(/(\d+.\d+) (Bytes|K|M|G|T)B?/);
+          let a = $('.stats_mylist .size .value').html().match(/(\d+.\d+) (Bytes|K|M|G|T)B?/);
           let mp = {
             "Bytes": 1 / 1024 / 1048576,
                 "K": 1 / 1048576,
@@ -375,13 +374,13 @@
           steps = fixedCutoffs.gigabyteCount;
         }
         if (badge.is('.mylist.timewasted')) {
-          let a = getPlainText(jQ('.stats_mylist .timewasted .value')).match(/(\d+) d (\d+) h/);
+          let a = getPlainText($('.stats_mylist .timewasted .value')).match(/(\d+) d (\d+) h/);
           let current = (a === undefined) ? 0 : parseInt(a[1]) + a[2] / 24;
           numbers = [current + ' of ∞', current, '∞'];
           steps = fixedCutoffs.wastedDaysCount;
         }
         if (badge.is('.stats.anidbmember')) {
-          let a = jQ('.userpage_all .g_section.info .membersince .value').html();
+          let a = $('.userpage_all .g_section.info .membersince .value').html();
           let day = a.slice(0, 2);
           let month = a.slice(3, 5);
           let year = a.slice(6, 10);
@@ -393,34 +392,34 @@
           steps = fixedCutoffs.memberDaysCount;
         }
         if (badge.is('.stats.animeadded')) {
-          let a = getPlainText(jQ('.stats_contrib .aacnt .value'));
+          let a = getPlainText($('.stats_contrib .aacnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.animeAddedCount;
         }
         if (badge.is('.stats.avmf')) {
-          let a = getPlainText(jQ('.stats_contrib .facnt .value').slice(1));
+          let a = getPlainText($('.stats_contrib .facnt .value').slice(1));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.filesDumpedCount;
         }
         if (badge.is('.stats.creatoradded')) {
-          let a = getPlainText(jQ('.stats_contrib .pacnt .value'));
+          let a = getPlainText($('.stats_contrib .pacnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.creatorsAddedCount;
         }
         if (badge.is('.stats.creqcount')) {
-          let a = getPlainText(jQ('.stats_creq .creqok .value'));
-          let b = getPlainText(jQ('.stats_creq .creqfailed .value'));
+          let a = getPlainText($('.stats_creq .creqok .value'));
+          let b = getPlainText($('.stats_creq .creqfailed .value'));
           let c = parseInt(a) - parseInt(b);
           numbers = [c + ' of ∞', c, '∞'];
           steps = fixedCutoffs.grantedCreqsCount;
         }
         if (badge.is('.stats.votes')) {
-          let a = getPlainText(jQ('.stats_community .votecnt .value'));
+          let a = getPlainText($('.stats_community .votecnt .value'));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.voteCount;
         }
         if (badge.is('.stats.tags')) {
-          let a = getPlainText(jQ('.stats_contrib .taacnt .value').slice(1));
+          let a = getPlainText($('.stats_contrib .taacnt .value').slice(1));
           numbers = [a + ' of ∞', a, '∞'];
           steps = fixedCutoffs.assignedTagsCount;
         }
@@ -493,23 +492,23 @@
       </div>`);
   });
 
-  jQ('.achievements > .g_bubblewrap > .container .swebb_badge-bar-container').each(function() {
-    jQ(this).parent('.g_bubblewrap').addClass('swebb_badgebox');
+  $('.achievements > .g_bubblewrap > .container .swebb_badge-bar-container').each(function() {
+    $(this).parent('.g_bubblewrap').addClass('swebb_badgebox');
   });
 
   // Append the original badge view as an additional badge box
-  jQ('.achievements > div').append(`
+  $('.achievements > div').append(`
     <div class="g_bubble container swebb_badges-orig">
       <h3 class="swebb_toggler swebb_condensed">Original view</h3>
       <div class="swebb_badgebox">${originalHTML}</div>
     </div>`);
 
   // Collapse the badge boxes by default
-  jQ('.swebb_badgebox').hide();
+  $('.swebb_badgebox').hide();
 
   // Bind click events to enable expanding/collapsing of badge boxes
-  jQ('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
-    jQ(this).next().slideToggle('fast');
-    jQ(this).toggleClass("swebb_condensed");
+  $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
+    $(this).next().slideToggle('fast');
+    $(this).toggleClass("swebb_condensed");
   }).addClass("swebb_toggler swebb_condensed");
 })(window.$ || window.jQuery);

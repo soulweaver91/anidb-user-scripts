@@ -6,6 +6,7 @@
 // @version     2017.06.12
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
+// @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
 //
 // Copyright (c) 2012-2017 Soulweaver <soulweaver@hotmail.fi>
 //

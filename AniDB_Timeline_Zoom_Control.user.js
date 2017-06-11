@@ -5,7 +5,8 @@
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=timeline(&|$)/
 // @version     2017.06.12
 // @grant       none
-// @update      https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Zoom_Control.user.js
+// @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Zoom_Control.user.js
+// @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Zoom_Control.user.js
 //
 // Copyright (c) 2017 Soulweaver <soulweaver@hotmail.fi>
 //

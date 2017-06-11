@@ -7,6 +7,7 @@
 // @version     2017.06.12
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Stats_Votes_as_Donut_Graph.user.js
+// @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Stats_Votes_as_Donut_Graph.user.js
 //
 // Copyright (c) 2017 Soulweaver <soulweaver@hotmail.fi>
 //

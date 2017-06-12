@@ -968,7 +968,7 @@
           hidden: true
         },
         {
-          selector: '.boardgame.belgium-2013-10',
+          selector: '.boardgame.belgium-2015-10',
           name: 'ABGM #6 participation - Belgium, Oct 2015',
           tiers: null,
           currentValueGetter: () => null,

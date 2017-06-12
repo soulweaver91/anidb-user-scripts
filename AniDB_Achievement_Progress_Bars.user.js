@@ -50,7 +50,8 @@
   const defaultSettings = {
     openedSections: [],
     displayUnobtained: true,
-    useWideBoxes: true
+    useWideBoxes: true,
+    displayOverallProgressStrip: true
   };
 
   let settings = null;
@@ -109,6 +110,16 @@
     font-size: 0;
     border-top-left-radius: 9px;
     border-bottom-left-radius: 9px;
+  }
+
+  .swebb_badge-bar .swebb_bar_overall {
+    height: 4px;
+    position: relative;
+    top: 10px;
+    width: 200px;
+  }
+  .swebb_badge-bar .swebb_bar_overall .bar {
+    height: 4px;
   }
 
   div.swebb_badge-small,
@@ -216,6 +227,12 @@
   .swebb_badge-bar.swebb_max .swebb_badge-bar-icon {
     background-color: #34394D;
     color: #CCCCCC;
+  }
+  .swebb_badge-bar .swebb_bar_overall {
+    background-color: #CFD1D4;
+  }
+  .swebb_badge-bar .swebb_bar_overall .bar {
+    background-color: #58636E;
   }
 
   #swebb_settings_dialog {
@@ -354,6 +371,12 @@
             <label>
               <input type="checkbox" name="useWideBoxes" ${settings.useWideBoxes ? 'checked="checked"' : ''}>
               Use wide achievement category containers
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="displayOverallProgressStrip" ${settings.displayOverallProgressStrip ? 'checked="checked"' : ''}>
+              Display a secondary bar section for overall badge progress
             </label>
           </div>
           <div>
@@ -1154,8 +1177,12 @@
 
         // Set the default bar percentage to 100% for badges that don't have a clear progression.
         levelPercentage = 1;
+        overallPercentage = 1;
         if (levelStartValue !== null && levelEndValue !== null) {
           levelPercentage = Math.max(0, Math.min(1, (currentValue - levelStartValue) / (levelEndValue - levelStartValue)));
+        }
+        if (tiers) {
+          overallPercentage = Math.max(0, Math.min(1, currentValue / tiers[tiers.length - 1]));
         }
 
         let isMax = !tiers || currentLevel === tiers.length;
@@ -1167,7 +1194,9 @@
               </div>
             </div>`, badge.link)}<div
             class="swebb_badge-bar${isMax ? " swebb_max" : ""}">
-               <div class="swebb_bar" style="width: ${levelPercentage * 200}px;">&nbsp;</div>
+               <div class="swebb_bar" style="width: ${levelPercentage * 200}px;">&nbsp;${settings.displayOverallProgressStrip
+                  ? `<div class="swebb_bar_overall"><div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
+                  : ''}</div>
                <span class="swebb_badgetopic">${linkify(badge.name + (badge.copyOriginalName ? ` - ${badgeDescription}` : ''), badge.link)}</span>
                ${levelStartValue ? `<span class="swebb_prevlv">${formatter(levelStartValue)}</span>` : ''}
                ${levelEndValue ? `<span class="swebb_nextlv">${formatter(levelEndValue)}</span>` : ''}

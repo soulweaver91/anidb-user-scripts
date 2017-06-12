@@ -47,14 +47,22 @@
   }
 
   const settingsKey = 'SWAchievementProgressBarsSettings';
+  const defaultSettings = {
+    openedSections: [],
+    displayUnobtained: true,
+    useWideBoxes: true
+  };
+
   let settings = null;
   try {
     let settingsStr = localStorage.getItem(settingsKey);
     if (settingsStr) {
-      settings = JSON.parse(settingsStr);
+      settings = Object.assign({}, defaultSettings);
+      settings = Object.assign(settings, JSON.parse(settingsStr));
     }
   } catch (e) {
     console.error(e);
+    settings = null;
   }
 
   let saveSettings = () => {
@@ -62,9 +70,7 @@
   };
 
   if (!settings) {
-    settings = {
-      openedSections: []
-    };
+    settings = defaultSettings;
     saveSettings();
   }
 
@@ -74,7 +80,7 @@
   // and it is nicer to not need to ship our own copy of it.
   $('head link[title="Style"]').after(`<style type="text/css" id="swebb_style">
   /* Style definitions for Soulweaver's Experimental Badge Bars */
-  .swebb_badges-category {
+  .swebb_badges-category.wide {
     width: 100%;
   }
   
@@ -211,6 +217,15 @@
     background-color: #34394D;
     color: #CCCCCC;
   }
+  
+  #swebb_settings_dialog {
+    min-width: 300px;
+  }
+  #swebb_settings_dialog label {
+    width: 100%;
+    text-align: left;
+    display: block;
+  }
   </style>`);
 
   let determineUserGender = () => {
@@ -321,6 +336,73 @@
       if ($(category).find('.badge').length === 0) {
         $(category).remove();
       }
+    })
+  };
+
+  let showSettingsDialog = () => {
+    $.fancybox.open([{
+      content: `<div id="swebb_settings_dialog">
+        <h1>Achievement Progress Bars settings</h1>
+        <form>
+          <div>
+            <label>
+              <input type="checkbox" name="displayUnobtained" ${settings.displayUnobtained ? 'checked="checked"' : ''}> 
+              Display unobtained badges
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="useWideBoxes" ${settings.useWideBoxes ? 'checked="checked"' : ''}> 
+              Use wide achievement category containers
+            </label>
+          </div>
+          <div>
+            <button class="swebb_settings_save-button">Save</button>
+          </div>
+        </form>
+      </div>`,
+      wrapCSS: 'g_bubble',
+      closeBtn: true,
+      maxWidth: 600,
+      helpers: {
+        overlay: {
+          locked: false
+        }
+      }
+    }]);
+
+    $('.swebb_settings_save-button').click((e) => {
+      e.preventDefault();
+      let form = $(e.target).parents('form')[0];
+      for (let i = 0; i < form.elements.length; ++i) {
+        let elem = form.elements[i];
+        if (elem.name) {
+          switch (elem.type) {
+            case 'checkbox':
+              settings[elem.name] = elem.checked;
+              break;
+            case 'text':
+            default:
+              settings[elem.name] = elem.value;
+              break;
+          }
+        }
+      }
+
+      saveSettings();
+      $.fancybox.close();
+      window.location.reload();
+    });
+  };
+
+  let insertSettingsButtonSection = () => {
+    $('.achievements > h2').after(`<div class="edit_actions">
+       <span class="show swebb_settings-button"><a title="Open Achievement Progress Bars settings" href="#">Progress Bars settings</a></span>
+     </div>`);
+
+    $('.swebb_settings-button').click((e) => {
+      e.preventDefault();
+      showSettingsDialog();
     })
   };
 
@@ -979,13 +1061,13 @@
       let elementSelector = 'swebb_badges-category-' + dashify(category.name);
 
       $('.swebb_badges-orig').before(`
-      <div class="g_bubble container swebb_badges-category ${elementSelector}" data-category-key="${dashify(category.name)}">
+      <div class="g_bubble container swebb_badges-category ${elementSelector} ${settings.useWideBoxes ? 'wide' : ''}" data-category-key="${dashify(category.name)}">
         <h3 class="swebb_toggler swebb_condensed">${category.name}</h3>
         <div class="swebb_badgebox">
           <div class="swebb_obtained-badges"></div>
-          <div class="swebb_unobtained-badges">
+          ${settings.displayUnobtained ? `<div class="swebb_unobtained-badges">
             <h4>Unobtained badges</h4>
-          </div>
+          </div>` : ''}
         </div>
       </div>`);
 
@@ -1106,4 +1188,5 @@
   removeEmptySections();
   bindCollapseEvents();
   collapseBlocks();
+  insertSettingsButtonSection();
 })(window.$ || window.jQuery);

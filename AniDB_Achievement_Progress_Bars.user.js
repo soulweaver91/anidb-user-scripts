@@ -1074,8 +1074,9 @@
       let obtainedContainer = $('.' + elementSelector + ' .swebb_obtained-badges');
       let unobtainedContainer = $('.' + elementSelector + ' .swebb_unobtained-badges');
 
-      let sortedBadges = category.badges.sort((badge1, badge2) => badge1.name > badge2.name);
-      sortedBadges.forEach((badge) => {
+      category.badges.sort((badge1, badge2) => {
+        return (badge1.name > badge2.name) ? 1 : ((badge1.name < badge2.name) ? -1 : 0);
+      }).forEach((badge) => {
         let originalBadge = $(`.swebb_badges-orig .badge${category.selector}${badge.selector}`);
         let badgeClassStr = ('badge' + category.selector + badge.selector).replace(/\./g, ' ');
         let obtained = originalBadge.length > 0;

@@ -190,21 +190,21 @@
                             1460.96880, 2556.69540, 3652.42200, 3652.42200]
   };
 
-  let normTime = (float_num) => {
-    var d = Math.floor(float_num);
-    var h = Math.round((float_num - d) * 24);
-    return d + "d " + h + "h";
+  let normalizedTime = (daysFloat) => {
+    let days = Math.floor(daysFloat);
+    let hours = Math.round((daysFloat - days) * 24);
+    return days + "d " + hours + "h";
   }
 
-  let normAge = (float_num) => {
-    var d = Math.floor(float_num);
-    var h = Math.round(float_num - d);
+  let normalizedAge = (daysFloat) => {
+    var days = Math.floor(daysFloat);
+    var hours = Math.round(daysFloat - days);
     // here's room for improvement, leap day handling is subpar
-    var y = Math.floor(d / 365.25);
-    d = Math.round(d % 365.25 + h);
-    if (d >= 365) { d = 0; y += 1; }
-    var years = (y > 0) ? y + "y " : "";
-    return years + d + "d ";
+    var years = Math.floor(days / 365.25);
+    days = Math.round(days % 365.25 + hours);
+    if (days >= 365) { days = 0; years += 1; }
+    var years = (years > 0) ? years + "y " : "";
+    return years + days + "d ";
   }
 
   let linkSearch = (str) => {
@@ -228,6 +228,25 @@
     wrapped.find('*').remove();
     return wrapped.html().trim();
   }
+
+  let bindCollapseEvents = () => {
+    $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
+      $(this).next().slideToggle('fast');
+      $(this).toggleClass("swebb_condensed");
+    }).addClass("swebb_toggler swebb_condensed");
+  };
+
+  let collapseBlocks = () => {
+    $('.swebb_badgebox').hide();
+  };
+
+  let appendOriginalViewBlock = (viewHTML) => {
+    $('.achievements > div').append(`
+    <div class="g_bubble container swebb_badges-orig">
+      <h3 class="swebb_toggler swebb_condensed">Original view</h3>
+      <div class="swebb_badgebox">${viewHTML}</div>
+    </div>`);
+  };
 
   let originalHTML = "";
   $('.achievements .container .container').each(function() {
@@ -449,16 +468,16 @@
     let isMax = (parseInt(numbers[1]) >= parseInt(numbers[2])) || (curlv_max == curlv_min);
 
     if (badge.is('.mylist.timewasted')) {
-      numbers[1] = normTime(numbers[1]);
+      numbers[1] = normalizedTime(numbers[1]);
       numbers[0] = numbers[1] + " of " + numbers[2];
-      curlv_min = normTime(curlv_min);
-      curlv_max = normTime(curlv_max);
+      curlv_min = normalizedTime(curlv_min);
+      curlv_max = normalizedTime(curlv_max);
     }
     if (badge.is('.stats.anidbmember')) {
-      numbers[1] = normAge(numbers[1]);
+      numbers[1] = normalizedAge(numbers[1]);
       numbers[0] = numbers[1] + " of " + numbers[2];
-      curlv_min = normAge(curlv_min);
-      curlv_max = normAge(curlv_max);
+      curlv_min = normalizedAge(curlv_min);
+      curlv_max = normalizedAge(curlv_max);
     }
     if (badge.is('.mylist.mylistsize')) {
       numbers[1] += "GiB";
@@ -496,19 +515,7 @@
     $(this).parent('.g_bubblewrap').addClass('swebb_badgebox');
   });
 
-  // Append the original badge view as an additional badge box
-  $('.achievements > div').append(`
-    <div class="g_bubble container swebb_badges-orig">
-      <h3 class="swebb_toggler swebb_condensed">Original view</h3>
-      <div class="swebb_badgebox">${originalHTML}</div>
-    </div>`);
-
-  // Collapse the badge boxes by default
-  $('.swebb_badgebox').hide();
-
-  // Bind click events to enable expanding/collapsing of badge boxes
-  $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
-    $(this).next().slideToggle('fast');
-    $(this).toggleClass("swebb_condensed");
-  }).addClass("swebb_toggler swebb_condensed");
+  appendOriginalViewBlock(originalHTML);
+  bindCollapseEvents();
+  collapseBlocks();
 })(window.$ || window.jQuery);

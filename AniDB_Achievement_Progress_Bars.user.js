@@ -46,6 +46,28 @@
     return;
   }
 
+  const settingsKey = 'SWAchievementProgressBarsSettings';
+  let settings = null;
+  try {
+    let settingsStr = localStorage.getItem(settingsKey);
+    if (settingsStr) {
+      settings = JSON.parse(settingsStr);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  let saveSettings = () => {
+    localStorage.setItem(settingsKey, JSON.stringify(settings));
+  };
+
+  if (!settings) {
+    settings = {
+      openedSections: []
+    };
+    saveSettings();
+  }
+
   // Add the needed stylesheet using jQuery.
   // There is a GreaseMonkey native function for this (GM_addStyle) but if @grant is anything but none,
   // the jQuery obtained from unsafeWindow breaks (specifically, cannot handle jQ(...).each() anymore),
@@ -243,6 +265,14 @@
     $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
       $(this).next().slideToggle('fast');
       $(this).toggleClass("swebb_condensed");
+
+      let sectionKey = $(this).parent().data('categoryKey')
+      if ($(this).hasClass('swebb_condensed')) {
+        settings.openedSections = settings.openedSections.filter((k) => k !== sectionKey);
+      } else {
+        settings.openedSections.push(sectionKey);
+      }
+      saveSettings();
     }).addClass("swebb_toggler swebb_condensed");
   };
 
@@ -250,7 +280,7 @@
     let viewHTML = $('.achievements > .container').html();
     $('.achievements > .container > *').remove();
     $('.achievements > .container').append(`
-    <div class="g_bubble container swebb_badges-orig">
+    <div class="g_bubble container swebb_badges-orig" data-category-key="original-view">
       <h3 class="swebb_toggler swebb_condensed">Original view</h3>
       <div class="swebb_badgebox">${viewHTML}</div>
     </div>`);
@@ -258,6 +288,13 @@
 
   let collapseBlocks = () => {
     $('.swebb_badgebox').hide();
+    $('.swebb_badges-category').each((_, badgeBox) => {
+      console.log($(badgeBox), $(badgeBox).data('categoryKey'));
+      if (settings.openedSections.indexOf($(badgeBox).data('categoryKey')) !== -1) {
+        $(badgeBox).children('.swebb_badgebox').show();
+        $(badgeBox).children('h3').removeClass("swebb_condensed");
+      }
+    });
   };
 
   let dashify = (str) => {
@@ -942,7 +979,7 @@
       let elementSelector = 'swebb_badges-category-' + dashify(category.name);
 
       $('.swebb_badges-orig').before(`
-      <div class="g_bubble container swebb_badges-category ${elementSelector}">
+      <div class="g_bubble container swebb_badges-category ${elementSelector}" data-category-key="${dashify(category.name)}">
         <h3 class="swebb_toggler swebb_condensed">${category.name}</h3>
         <div class="swebb_badgebox">
           <div class="swebb_obtained-badges"></div>

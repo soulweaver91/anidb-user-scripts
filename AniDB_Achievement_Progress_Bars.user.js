@@ -83,7 +83,7 @@
   .swebb_badges-category.wide {
     width: 100%;
   }
-  
+
   .swebb_badge-bar-container {
     display: inline-block;
     width: 300px;
@@ -176,7 +176,7 @@
     text-decoration: none;
     color: inherit;
   }
-  
+
   .swebb_unobtained-badge {
     opacity: 0.5;
     transform: scale(0.5);
@@ -185,7 +185,7 @@
     position: relative;
     z-index: 0;
   }
-  
+
   .swebb_unobtained-badge:hover {
     opacity: 0.8;
     transform: scale(1);
@@ -217,7 +217,7 @@
     background-color: #34394D;
     color: #CCCCCC;
   }
-  
+
   #swebb_settings_dialog {
     min-width: 300px;
   }
@@ -241,7 +241,7 @@
     let days = Math.floor(daysFloat);
     let hours = Math.round((daysFloat - days) * 24);
     return days + "d " + hours + "h";
-  }
+  };
 
   let normalizedAge = (daysFloat) => {
     var days = Math.floor(daysFloat);
@@ -252,36 +252,36 @@
     if (days >= 365) { days = 0; years += 1; }
     var years = (years > 0) ? years + "y " : "";
     return years + days + "d ";
-  }
+  };
 
   let linkSearch = (str) => {
     return '/perl-bin/animedb.pl?show=animelist&adb.search=' + str + '&do.search=search';
-  }
+  };
 
   let linkRel = (id) => {
     return '/perl-bin/animedb.pl?show=rel&aid=' + id;
-  }
+  };
 
   let linkTag = (id) => {
     return '/t' + id;
-  }
+  };
 
   let linkCreator = (id) => {
     return '/cr' + id;
-  }
+  };
 
   let getPlainText = (el) => {
     let wrapped = $('<div>' + el.html() + '</div>');
     wrapped.find('*').remove();
     return wrapped.html().trim();
-  }
+  };
 
   let bindCollapseEvents = () => {
     $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
       $(this).next().slideToggle('fast');
       $(this).toggleClass("swebb_condensed");
 
-      let sectionKey = $(this).parent().data('categoryKey')
+      let sectionKey = $(this).parent().data('categoryKey');
       if ($(this).hasClass('swebb_condensed')) {
         settings.openedSections = settings.openedSections.filter((k) => k !== sectionKey);
       } else {
@@ -336,7 +336,7 @@
       if ($(category).find('.badge').length === 0) {
         $(category).remove();
       }
-    })
+    });
   };
 
   let showSettingsDialog = () => {
@@ -346,13 +346,13 @@
         <form>
           <div>
             <label>
-              <input type="checkbox" name="displayUnobtained" ${settings.displayUnobtained ? 'checked="checked"' : ''}> 
+              <input type="checkbox" name="displayUnobtained" ${settings.displayUnobtained ? 'checked="checked"' : ''}>
               Display unobtained badges
             </label>
           </div>
           <div>
             <label>
-              <input type="checkbox" name="useWideBoxes" ${settings.useWideBoxes ? 'checked="checked"' : ''}> 
+              <input type="checkbox" name="useWideBoxes" ${settings.useWideBoxes ? 'checked="checked"' : ''}>
               Use wide achievement category containers
             </label>
           </div>
@@ -403,7 +403,7 @@
     $('.swebb_settings-button').click((e) => {
       e.preventDefault();
       showSettingsDialog();
-    })
+    });
   };
 
   const userGender = determineUserGender();

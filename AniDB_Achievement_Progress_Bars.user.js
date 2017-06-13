@@ -890,6 +890,13 @@
           tiers: [1, 5, 10, 25, 50, 100],
           currentValueGetter: () => null,
           useTierStartAsValue: true
+        },
+        {
+          selector: '.userroles',
+          name: 'User level',
+          tiers: null,
+          currentValueGetter: () => null,
+          hidden: true
         }
       ]
     },
@@ -1170,7 +1177,7 @@
           // to be used in the bar.
           levelStartValue = tiers[currentLevel - 1];
           levelEndValue = currentLevel < tiers.length ? tiers[currentLevel] : tiers[tiers.length - 1];
-        } else {
+        } else if (!currentLevel) {
           // Badges without tiers will be shown as level one.
           currentLevel = 1;
         }

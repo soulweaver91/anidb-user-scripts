@@ -51,7 +51,8 @@
     openedSections: [],
     displayUnobtained: true,
     useWideBoxes: true,
-    displayOverallProgressStrip: true
+    displayOverallProgressStrip: true,
+    displayOverallProgressTicks: true
   };
 
   let settings = null;
@@ -126,6 +127,12 @@
   }
   .swebb_badge-bar .swebb_bar_overall .bar {
     height: 4px;
+  }
+  .swebb_bar_overall-tier-marker {
+    height: 4px;
+    position: absolute;
+    top: 0;
+    left: 0;
   }
 
   div.swebb_badge-small,
@@ -211,7 +218,7 @@
   .swebb_badges-orig {
     margin-top: 0.5em;
   }
-
+  
   /* Style specific definitions start here */
   .swebb_badge-bar,
   span.swebb_badge-bar-icon {
@@ -235,6 +242,9 @@
   }
   .swebb_badge-bar .swebb_bar_overall .bar {
     background-color: #58636E;
+  }
+  .swebb_bar_overall-tier-marker {
+    border-right: 1px solid rgba(0,0,0,0.5);
   }
   
   span.swebb_prevlv,
@@ -386,6 +396,12 @@
             <label>
               <input type="checkbox" name="displayOverallProgressStrip" ${settings.displayOverallProgressStrip ? 'checked="checked"' : ''}>
               Display a secondary bar section for overall badge progress
+            </label>
+          </div>
+          <div>
+            <label>
+              <input type="checkbox" name="displayOverallProgressTicks" ${settings.displayOverallProgressTicks ? 'checked="checked"' : ''}>
+              Display ticks for each tier thresholds in the overall badge progress bar
             </label>
           </div>
           <div>
@@ -1217,6 +1233,13 @@
 
         let isMax = !tiers || currentLevel === tiers.length;
 
+        let tierMarkers = '';
+        if (settings.displayOverallProgressStrip && settings.displayOverallProgressTicks && tiers && currentLevel) {
+          for (let i = 0; i < tiers.length - 1; ++i) {
+            tierMarkers += `<div class="swebb_bar_overall-tier-marker" style="width:${(tiers[i] / completionValue) * 200}px">&nbsp;</div>`;
+          }
+        }
+
         obtainedContainer.append(`<div class="swebb_obtained-badge swebb_badge-bar-container" title="${badgeTitleText}">
             ${linkify(`<div class="${badgeClassStr} swebb_badge-small">
               <div class="inner">
@@ -1225,7 +1248,7 @@
             </div>`, badge.link)}<div
             class="swebb_badge-bar${isMax ? " swebb_max" : ""}">
                <div class="swebb_bar" style="width: ${levelPercentage * 200}px;">&nbsp;${settings.displayOverallProgressStrip
-                  ? `<div class="swebb_bar_overall"><div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
+                  ? `<div class="swebb_bar_overall">${tierMarkers}<div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
                   : ''}</div>
                <span class="swebb_badgetopic">${linkify(badge.name + (badge.copyOriginalName ? `: ${badgeDescription}` : ''), badge.link)}</span>
                ${levelStartValue ? `<span class="swebb_prevlv">${formatter(levelStartValue)}</span>` : ''}

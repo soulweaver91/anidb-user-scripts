@@ -1137,6 +1137,7 @@
         let levelStartValue = null;
         let levelEndValue = null;
         let completionValue = null;
+        let isInfinite = true;
         let tiers = badge.tiers;
         let formatter = badge.valueFormatter || ((val) => parseFloat(val).toLocaleString('en-GB'));
 
@@ -1176,6 +1177,7 @@
 
           currentValue = itemsDone;
           completionValue = itemsTotal;
+          isInfinite = false;
           tiers = [];
           for (let i = 1; i < 9; i++) {
             // Based on empirical results, the badge granting thresholds are actually at 10.5%, 21.5%, ...
@@ -1197,6 +1199,7 @@
           // to be used in the bar.
           levelStartValue = tiers[currentLevel - 1];
           levelEndValue = currentLevel < tiers.length ? tiers[currentLevel] : tiers[tiers.length - 1];
+          completionValue = tiers[tiers.length - 1];
         } else if (!currentLevel) {
           // Badges without tiers will be shown as level one.
           currentLevel = 1;
@@ -1228,7 +1231,7 @@
                ${levelStartValue ? `<span class="swebb_prevlv">${formatter(levelStartValue)}</span>` : ''}
                ${levelEndValue ? `<span class="swebb_nextlv">${formatter(levelEndValue)}</span>` : ''}
                <span class="swebb_current">
-                 ${currentValue ? `<span class="swebb_progress">${formatter(currentValue)}${badge.useTierStartAsValue ? '+' : ''}/${completionValue ? formatter(completionValue) : '∞'}</span>` : ''}
+                 ${currentValue ? `<span class="swebb_progress">${formatter(currentValue)}${badge.useTierStartAsValue ? '+' : ''}/${completionValue ? formatter(completionValue) : ''}${isInfinite ? '+' : ''}</span>` : ''}
                  <br />
                  ${(!!lastLevelUp && !!currentLevel) ? `Level ${romanNumerals[currentLevel]} reached on ${lastLevelUp}` : ''}
                </span>

@@ -210,6 +210,12 @@
     transform: scale(1);
     z-index: 1;
   }
+  
+  .swebb_has-bars-section div.badge.one-time,
+  .swebb_has-bars-section div.badge.special,
+  .swebb_has-bars-section div.badge.mod {
+    background-image: none;
+  }
 
   h3.swebb_toggler.swebb_condensed:after { content: " [+]"; }
   h3.swebb_toggler:after { content: " [−]"; }
@@ -1127,7 +1133,7 @@
       let elementSelector = 'swebb_badges-category-' + dashify(category.name);
 
       $('.swebb_badges-orig').before(`
-      <div class="g_bubble container swebb_badges-category ${elementSelector} ${settings.useWideBoxes ? 'wide' : ''}" data-category-key="${dashify(category.name)}">
+      <div class="g_bubble container swebb_badges-category swebb_has-bars-section ${elementSelector} ${settings.useWideBoxes ? 'wide' : ''}" data-category-key="${dashify(category.name)}">
         <h3 class="swebb_toggler swebb_condensed">${category.name}</h3>
         <div class="swebb_badgebox">
           <div class="swebb_obtained-badges"></div>

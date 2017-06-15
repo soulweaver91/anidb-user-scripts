@@ -795,10 +795,19 @@
 
             return sizeString[1] * factor[sizeString[2]];
           },
-          valueFormatter: (val) => val.toLocaleString('en-GB', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-          }) + 'GiB'
+          valueFormatter: (val) => {
+            if (val < 512) {
+              return val.toLocaleString('en-GB', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              }) + 'GiB';
+            } else {
+              return (val / 1024).toLocaleString('en-GB', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              }) + 'TiB';
+            }
+          }
         },
         {
           selector: '.timewasted',

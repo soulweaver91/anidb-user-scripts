@@ -1187,7 +1187,7 @@
         // Set the default bar percentage to 100% for badges that don't have a clear progression.
         levelPercentage = 1;
         overallPercentage = 1;
-        if (levelStartValue !== null && levelEndValue !== null) {
+        if (levelStartValue !== null && levelEndValue !== null && currentLevel < tiers.length) {
           levelPercentage = Math.max(0, Math.min(1, (currentValue - levelStartValue) / (levelEndValue - levelStartValue)));
         }
         if (tiers) {

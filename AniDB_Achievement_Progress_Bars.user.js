@@ -312,7 +312,7 @@
     let viewHTML = $('.achievements > .container').html();
     $('.achievements > .container > *').remove();
     $('.achievements > .container').append(`
-    <div class="g_bubble container swebb_badges-orig" data-category-key="original-view">
+    <div class="g_bubble container swebb_badges-category swebb_badges-orig" data-category-key="original-view">
       <h3 class="swebb_toggler swebb_condensed">Original view</h3>
       <div class="swebb_badgebox">${viewHTML}</div>
     </div>`);

@@ -87,29 +87,35 @@
 
   .swebb_badge-bar-container {
     display: inline-block;
-    width: 300px;
+    width: 290px;
     height: 60px;
     font-size: 15pt;
-    margin: 5px 0;
+    margin: 5px;
+    position: relative;
+    text-align: right;
   }
+  
+  .swebb_badge-bar-container > a,
+  .swebb_badge-bar-container > .badge {
+    position: absolute;
+    left: -10px;
+    top: -10px;
+  }
+  
   .swebb_badge-bar {
     font-size: 8pt;
     width: 200px;
     height: 14px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
     display: inline-block;
     margin: 0px 0 33px;
     position: relative;
-    left: -16px;
+    left: -32px;
     top: -5px;
   }
 
   .swebb_badge-bar .swebb_bar {
     height: 14px;
     font-size: 0;
-    border-top-left-radius: 9px;
-    border-bottom-left-radius: 9px;
   }
 
   .swebb_badge-bar .swebb_bar_overall {
@@ -127,16 +133,11 @@
     display: inline-block;
     z-index: 1;
     position: relative;
-    top: -6px;
   }
-
-  div.swebb_badge-small { background-image: none !important; }
-  /* the below required to prevent odd layout problems */
-  div.swebb_badge-small div.inner span.hide { display: inline !important; visibility: hidden; }
 
   span.swebb_badge-bar-icon {
     position: absolute;
-    width: 17px;
+    width: 25px;
     height: 14px;
     left: 201px;
     top: -1px;
@@ -152,10 +153,10 @@
   span.swebb_prevlv,
   span.swebb_nextlv,
   span.swebb_current { position: absolute; top: 16px; font-size: 80%; }
-  span.swebb_prevlv { left:  5px; }
+  span.swebb_prevlv { left:  2px; }
   span.swebb_nextlv { right: 0px; }
   span.swebb_current {
-    right: 35px;
+    right: 33px;
     width: 130px;
     display: inline-block;
     text-align: center;
@@ -176,12 +177,12 @@
   .swebb_badgetopic {
     position: absolute;
     top: -15px;
-    left: 5px;
+    left: 2px;
     height: 15px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: calc(100% + 25px);
+    max-width: calc(100% + 28px);
   }
   .swebb_badgetopic a {
     text-decoration: none;
@@ -222,6 +223,7 @@
   }
   span.swebb_badge-bar-icon {
     color: #AA0000;
+    letter-spacing: -1px;
   }
   .swebb_badge-bar .swebb_bar,
   .swebb_badge-bar.swebb_max .swebb_badge-bar-icon {
@@ -233,6 +235,13 @@
   }
   .swebb_badge-bar .swebb_bar_overall .bar {
     background-color: #58636E;
+  }
+  
+  span.swebb_prevlv,
+  span.swebb_nextlv,
+  span.swebb_progress {
+    letter-spacing: -1px;
+    line-height: 10px;
   }
 
   #swebb_settings_dialog {
@@ -1110,7 +1119,7 @@
         return (badge1.name > badge2.name) ? 1 : ((badge1.name < badge2.name) ? -1 : 0);
       }).forEach((badge) => {
         let originalBadge = $(`.swebb_badges-orig .badge${category.selector}${badge.selector}`);
-        let badgeClassStr = ('badge' + category.selector + badge.selector).replace(/\./g, ' ');
+        let badgeClassStr = (category.selector + badge.selector).replace(/\./g, ' ');
         let obtained = originalBadge.length > 0;
 
         // Initially, set all numerical values in the badge bar to unknown. They will be filled in shortly

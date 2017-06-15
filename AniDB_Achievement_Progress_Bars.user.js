@@ -930,81 +930,83 @@
           name: 'Contributed creative content',
           tiers: null,
           currentValueGetter: () => null,
-          hidden: true
+          hidden: true,
+          copyOriginalName: true
         },
         {
           selector: '.code',
           name: 'Contributed code',
           tiers: null,
           currentValueGetter: () => null,
-          hidden: true
+          hidden: true,
+          copyOriginalName: true
         },
         {
           selector: '.boardgame.germany-2013-10',
-          name: 'ABGM #1 participation - Germany, Oct 2013',
+          name: 'ABGM #1 - Germany, Oct 2013',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2014-03',
-          name: 'ABGM #2 participation - Germany, Mar 2014',
+          name: 'ABGM #2 - Germany, Mar 2014',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.sweden-2014-07',
-          name: 'ABGM #3 participation - Sweden, Jul 2014',
+          name: 'ABGM #3 - Sweden, Jul 2014',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2014-10',
-          name: 'ABGM #4 participation - Germany, Oct 2014',
+          name: 'ABGM #4 - Germany, Oct 2014',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.croatia-2015-04',
-          name: 'ABGM #5 participation - Croatia, Apr 2015',
+          name: 'ABGM #5 - Croatia, Apr 2015',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.belgium-2015-10',
-          name: 'ABGM #6 participation - Belgium, Oct 2015',
+          name: 'ABGM #6 - Belgium, Oct 2015',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2016-05',
-          name: 'ABGM #7 participation - Germany, May 2016',
+          name: 'ABGM #7 - Germany, May 2016',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2016-10',
-          name: 'ABGM #8 participation - Germany, Oct 2016',
+          name: 'ABGM #8 - Germany, Oct 2016',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2017-04',
-          name: 'ABGM #9 participation - Germany, Apr 2017',
+          name: 'ABGM #9 - Germany, Apr 2017',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.croatia-2017-09',
-          name: 'ABGM #10 participation - Croatia, Sep 2017',
+          name: 'ABGM #10 - Croatia, Sep 2017',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
@@ -1204,7 +1206,7 @@
                <div class="swebb_bar" style="width: ${levelPercentage * 200}px;">&nbsp;${settings.displayOverallProgressStrip
                   ? `<div class="swebb_bar_overall"><div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
                   : ''}</div>
-               <span class="swebb_badgetopic">${linkify(badge.name + (badge.copyOriginalName ? ` - ${badgeDescription}` : ''), badge.link)}</span>
+               <span class="swebb_badgetopic">${linkify(badge.name + (badge.copyOriginalName ? `: ${badgeDescription}` : ''), badge.link)}</span>
                ${levelStartValue ? `<span class="swebb_prevlv">${formatter(levelStartValue)}</span>` : ''}
                ${levelEndValue ? `<span class="swebb_nextlv">${formatter(levelEndValue)}</span>` : ''}
                <span class="swebb_current">

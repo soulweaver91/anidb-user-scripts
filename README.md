@@ -14,6 +14,8 @@ for most other browsers). After that, you can install a script in here by clicki
 way to review the code to be sure of its authenticity. Once a script is installed, you don't need to do anything else
 yourself – the script will run on the page it is designed for and do its thing automatically.
 
+**Greasemonkey 4 is not supported for now; maybe in the future. ([#10](https://github.com/soulweaver91/anidb-user-scripts/issues/10))**
+
 # Commit tag legend
 
 Since this repository will contain several autonomous scripts, most commits will only involve one of the scripts at

@@ -983,63 +983,63 @@
         },
         {
           selector: '.boardgame.germany-2013-10',
-          name: 'ABGM #1 - Germany, Oct 2013',
+          name: 'ABGM #01 - Germany, Oct 2013',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2014-03',
-          name: 'ABGM #2 - Germany, Mar 2014',
+          name: 'ABGM #02 - Germany, Mar 2014',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.sweden-2014-07',
-          name: 'ABGM #3 - Sweden, Jul 2014',
+          name: 'ABGM #03 - Sweden, Jul 2014',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2014-10',
-          name: 'ABGM #4 - Germany, Oct 2014',
+          name: 'ABGM #04 - Germany, Oct 2014',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.croatia-2015-04',
-          name: 'ABGM #5 - Croatia, Apr 2015',
+          name: 'ABGM #05 - Croatia, Apr 2015',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.belgium-2015-10',
-          name: 'ABGM #6 - Belgium, Oct 2015',
+          name: 'ABGM #06 - Belgium, Oct 2015',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2016-05',
-          name: 'ABGM #7 - Germany, May 2016',
+          name: 'ABGM #07 - Germany, May 2016',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2016-10',
-          name: 'ABGM #8 - Germany, Oct 2016',
+          name: 'ABGM #08 - Germany, Oct 2016',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
         },
         {
           selector: '.boardgame.germany-2017-04',
-          name: 'ABGM #9 - Germany, Apr 2017',
+          name: 'ABGM #09 - Germany, Apr 2017',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true
@@ -1047,6 +1047,13 @@
         {
           selector: '.boardgame.croatia-2017-09',
           name: 'ABGM #10 - Croatia, Sep 2017',
+          tiers: null,
+          currentValueGetter: () => null,
+          hidden: true
+        },
+        {
+          selector: '.boardgame.sweden-2018-06',
+          name: 'ABGM #11 - Sweden, Sep 2018',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true

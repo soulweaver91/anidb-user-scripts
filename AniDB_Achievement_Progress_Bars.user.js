@@ -52,7 +52,8 @@
     displayUnobtained: true,
     useWideBoxes: true,
     displayOverallProgressStrip: true,
-    displayOverallProgressTicks: true
+    displayOverallProgressTicks: true,
+    preferExpandOverCollapse: false
   };
 
   let settings = null;
@@ -268,6 +269,18 @@
     text-align: left;
     display: block;
   }
+
+  .swebb_all-expand-button {
+    display: none;
+  }
+  .swebb_prefer-collapse.swebb_no-expanded-sections .swebb_all-expand-button,
+  .swebb_prefer-expand.swebb_has-collapsed-sections .swebb_all-expand-button {
+    display: unset;
+  }
+  .swebb_prefer-collapse.swebb_no-expanded-sections .swebb_all-collapse-button,
+  .swebb_prefer-expand.swebb_has-collapsed-sections .swebb_all-collapse-button {
+    display: none;
+  }
   </style>`);
 
   let determineUserGender = () => {
@@ -317,11 +330,27 @@
     wrapped.find('*').remove();
     return wrapped.html().trim();
   };
+  
+  let updateCollapsedClassStatus = () => {
+      if (($('.achievements > .g_bubblewrap > .container h3:not(.swebb_condensed)').not('.swebb_badges-orig div.swebb_badgebox h3')).length === 0) {
+        $('.g_section.achievements').addClass('swebb_no-expanded-sections');
+      } else {
+        $('.g_section.achievements').removeClass('swebb_no-expanded-sections');
+      }
+      
+      if (($('.achievements > .g_bubblewrap > .container h3.swebb_condensed').not('.swebb_badges-orig div.swebb_badgebox h3')).length > 0) {
+        $('.g_section.achievements').addClass('swebb_has-collapsed-sections');
+      } else {
+        $('.g_section.achievements').removeClass('swebb_has-collapsed-sections');
+      }
+  }
 
   let bindCollapseEvents = () => {
     $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
       $(this).next().slideToggle('fast');
       $(this).toggleClass("swebb_condensed");
+      
+      updateCollapsedClassStatus();
 
       let sectionKey = $(this).parent().data('categoryKey');
       if ($(this).hasClass('swebb_condensed')) {
@@ -346,13 +375,20 @@
   let collapseBlocks = () => {
     $('.swebb_badgebox').hide();
     $('.swebb_badges-category').each((_, badgeBox) => {
-      console.log($(badgeBox), $(badgeBox).data('categoryKey'));
       if (settings.openedSections.indexOf($(badgeBox).data('categoryKey')) !== -1) {
         $(badgeBox).children('.swebb_badgebox').show();
         $(badgeBox).children('h3').removeClass("swebb_condensed");
       }
     });
   };
+  
+  let setExpandPreferenceClass = (preferExpand) => {
+    if (preferExpand) {
+      $('.g_section.achievements').addClass('swebb_prefer-expand');
+    } else {
+      $('.g_section.achievements').addClass('swebb_prefer-collapse');
+    }
+  }
 
   let dashify = (str) => {
     return str
@@ -411,6 +447,12 @@
             </label>
           </div>
           <div>
+            <label>
+              <input type="checkbox" name="preferExpandOverCollapse" ${settings.preferExpandOverCollapse ? 'checked="checked"' : ''}>
+              When some sections are expanded and some collapsed, show an "Expand all" button rather than "Collapse all"
+            </label>
+          </div>
+          <div>
             <button class="swebb_settings_save-button">Save</button>
           </div>
         </form>
@@ -451,12 +493,49 @@
 
   let insertSettingsButtonSection = () => {
     $('.achievements > h2').after(`<div class="edit_actions">
-       <span class="show swebb_settings-button"><a title="Open Achievement Progress Bars settings" href="#">Progress Bars settings</a></span>
+       <span class="show swebb_all-collapse-button">
+         <a title="Collapse all" href="#">Collapse all</a>
+       </span>
+       <span class="show swebb_all-expand-button">
+         <a title="Collapse all" href="#">Expand all</a>
+       </span>
+       <span class="show swebb_settings-button">
+         <a title="Open Achievement Progress Bars settings" href="#">Progress Bars settings</a>
+       </span>
      </div>`);
 
     $('.swebb_settings-button').click((e) => {
       e.preventDefault();
       showSettingsDialog();
+    });
+    
+    $('.swebb_all-expand-button').click(function(e) {
+      e.preventDefault();
+      $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').each(function() {
+        $(this).next().slideDown('fast');
+        $(this).removeClass("swebb_condensed");
+
+        let sectionKey = $(this).parent().data('categoryKey');
+        if (settings.openedSections.indexOf(sectionKey) === -1) {
+          settings.openedSections.push(sectionKey);
+        }
+      });
+      
+      saveSettings();
+      $('.g_section.achievements').removeClass('swebb_no-expanded-sections').removeClass('swebb_has-collapsed-sections');
+    });
+    
+    $('.swebb_all-collapse-button').click(function(e) {
+      e.preventDefault();
+      $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').each(function() {
+        $(this).next().slideUp('fast');
+        $(this).addClass("swebb_condensed");
+
+      });
+      
+      settings.openedSections = [];
+      saveSettings();
+      $('.g_section.achievements').addClass('swebb_no-expanded-sections').addClass('swebb_has-collapsed-sections');
     });
   };
 
@@ -1285,4 +1364,6 @@
   bindCollapseEvents();
   collapseBlocks();
   insertSettingsButtonSection();
+  setExpandPreferenceClass(settings.preferExpandOverCollapse);
+  updateCollapsedClassStatus();
 })(window.$ || window.jQuery);

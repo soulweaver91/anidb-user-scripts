@@ -3,13 +3,13 @@
 // @namespace   SoulweaverScript
 // @description Replaces the basic image based badges on AniDB user pages with progress bars for easier tracking
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
-// @version     2017.06.15
+// @version     2018.03.04
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
 //
-// Copyright (c) 2012-2017 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2012-2018 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -383,7 +383,7 @@
 
   let showSettingsDialog = () => {
     $.fancybox.open([{
-      content: `<div id="swebb_settings_dialog">
+      src: `<div id="swebb_settings_dialog" class="g_bubble">
         <h1>Achievement Progress Bars settings</h1>
         <form>
           <div>
@@ -415,8 +415,8 @@
           </div>
         </form>
       </div>`,
-      wrapCSS: 'g_bubble',
-      closeBtn: true,
+      type: 'html',
+      buttons: [ 'close' ],
       maxWidth: 600,
       helpers: {
         overlay: {

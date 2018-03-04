@@ -1132,7 +1132,7 @@
         },
         {
           selector: '.boardgame.sweden-2018-06',
-          name: 'ABGM #11 - Sweden, Sep 2018',
+          name: 'ABGM #11 - Sweden, Jun 2018',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true

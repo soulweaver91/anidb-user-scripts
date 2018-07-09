@@ -1,14 +1,15 @@
 // ==UserScript==
-// @name        AniDB Mass Add Files Today Button
+// @name        AniDB Mass Add Files Auxiliary Buttons
 // @namespace   SoulweaverScript
-// @description Adds shortcut buttons to fill in the current date in the file mass add form
+// @description Adds shortcut buttons to speed up adding data in the file mass add form
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addfilem(&|$)/
-// @version     2017.06.12
+// @version     2018.07.09
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Mass_Add_Files_Today_Button.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Mass_Add_Files_Today_Button.user.js
+// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js
 //
-// Copyright (c) 2017 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2017–2018 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -37,77 +38,151 @@
     console.log($);
     return;
   }
-  
-  // No package manager required
-  let padLeft = (str, len, fill) => {
-    str = str.toString();
-    return (len < str.length) ? str : (fill.repeat(len - str.length) + str);
-  };
-  
-  // Add the needed stylesheet using jQuery.
-  // There is a GreaseMonkey native function for this (GM_addStyle) but if @grant is anything but none,
-  // the jQuery obtained from unsafeWindow breaks (specifically, cannot handle $(...).each() anymore),
-  // and it is nicer to not need to ship our own copy of it.
-  $('head link[title="Style"]').after(`<style type="text/css" id="swebb_style">
-  /* no icon (calendar would be fitting but linking to arbitrary codepoints is flaky and I have a hunch a stripped down FA is used anyway) */
-  button.sw_addfilem_todaybtn:before {
-    content: '';
-    padding-right: 0;
-  }
 
-  button.sw_addfilem_todaybtn {
-    margin-left: .5em;
-  }
-  </style>`);
-  
-  let singleFileBtnClickHandler = (date) => { 
-    return (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+  const ISO_DATE = 'YYYY-MM-DD';
 
-      $(e.target).siblings('input').val(date);
-    };
-  };
-  
-  let allFilesBtnClickHandler = (date, container) => {
-    return (e) => {
-      e.preventDefault();
-      e.stopPropagation();
+  let utcDate = moment().utc();
+  let dateStr = utcDate.format(ISO_DATE);
 
-      container.find('tbody .release.date input, tfoot #releasedate').val(date);
-    };
-  };
-      
-  let insertButtons = (container) => {
-    if (container.find('.sw_addfilem_todaybtn').length > 0 || container.find('tbody .release.date input').length === 0) {
-      return;
-    }
-    
-    container.find('tbody .release.date input, tfoot #releasedate').after('<button class="sw_addfilem_todaybtn">Today</button>');
-  };
-  
-  let bindButtonClicks = (container, date) => {
-    container.on('click', 'tbody button.sw_addfilem_todaybtn', singleFileBtnClickHandler(date));
-    container.on('click', 'tfoot button.sw_addfilem_todaybtn', allFilesBtnClickHandler(date, container));
-  };
-  
   let container = $('#addfilem_form');
   if (container.length === 0) {
     console.error('Could not locate the containing form for today button script!');
     return;
   }
-  
-  let today = new Date();
-  let dateStr = [
-    today.getFullYear(), 
-    padLeft(today.getMonth() + 1, 2, '0'),
-    padLeft(today.getDate(), 2, '0')
-  ].join('-');
-    
+
+  // Add the needed stylesheet using jQuery.
+  // There is a GreaseMonkey native function for this (GM_addStyle) but if @grant is anything but none,
+  // the jQuery obtained from unsafeWindow breaks (specifically, cannot handle $(...).each() anymore),
+  // and it is nicer to not need to ship our own copy of it.
+  $('head link[title="Style"]').after(`<style type="text/css" id="swebb_style">
+  button.sw_addfilem_todaybtn:before {
+    content: '\\f133';
+  }
+  button.sw_addfilem_nyaabtn:before {
+    content: '\\f363';
+  }
+
+  button.sw_addfilem_todaybtn {
+    margin-left: .5em;
+  }
+
+  #layout-main div.addfilem.form #applytoall {
+    display: inline-block;
+    margin: 0;
+  }
+
+  #sw_addfilem_sharedbuttons {
+    margin-top: .5em;
+  }
+  </style>`);
+
+  let nyaaHandler = (input) => {
+    let maybeNyaaDate = input.val();
+    if (!/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(maybeNyaaDate)) {
+      return null;
+    }
+
+    // Nyaa dates are in local timezone
+    let nyaaDate = moment(maybeNyaaDate, 'YYYY-MM-DD HH:mm');
+    let convertedDate = nyaaDate.utc().format(ISO_DATE);
+    input.val(convertedDate);
+
+    return convertedDate;
+  };
+
+  let todayHandler = (input) => {
+    input.val(dateStr);
+  };
+
+  let specifiedDateHandler = (input, date) => {
+    input.val(date);
+  };
+
+  let singleFileTodayBtnClickHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    todayHandler($(e.target).parent().siblings('input'));
+  };
+
+  let singleFileNyaaBtnClickHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    nyaaHandler($(e.target).parent().siblings('input'));
+  };
+
+  let allFilesTodayBtnClickHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    container.find('tbody .release.date input, tfoot #releasedate').each((_, el) => todayHandler($(el)));
+  };
+
+  let allFilesNyaaBtnClickHandler = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (container.find('tfoot #releasedate').val().length > 0) {
+      let convertedDate = nyaaHandler(container.find('tfoot #releasedate'));
+      if (convertedDate) {
+        container.find('tbody .release.date input').each((_, el) => specifiedDateHandler($(el), convertedDate));
+      }
+    } else {
+      container.find('tbody .release.date input').each((_, el) => nyaaHandler($(el)));
+    }
+  };
+
+  let insertButtons = (container) => {
+    if (container.find('.sw_addfilem_todaybtn').length > 0 || container.find('tbody .release.date input').length === 0) {
+      return;
+    }
+
+    container.find('tbody .release.date input').after(`
+      <span class="sw_addfilem_addons sw_addfilem_singlefile">
+        <button class="sw_addfilem_todaybtn">Today</button>
+        <button class="sw_addfilem_nyaabtn">Convert Nyaa</button>
+      </span>
+    `);
+    container.find('tfoot #releasedate').after(`
+      <span class="sw_addfilem_addons sw_addfilem_allfiles">
+        <button class="sw_addfilem_todaybtn">Today</button>
+        <button class="sw_addfilem_nyaabtn">Convert Nyaa</button>
+      </span>
+    `);
+    const wideCell = container.find('tfoot td:first-child');
+    wideCell.append(`
+      <span class="sw_addfilem_addons sw_addfilem_text">
+        <input style="width: 0; visibility: hidden;" type="text"><!-- hack to realign text while being style agnostic -->
+        <span>UTC time at page load: ${utcDate.format('YYYY-MM-DD HH:mm:ss')}</span>
+      </span>
+    `);
+    wideCell.css({
+      textAlign: "right",
+      verticalAlign: "top"
+    });
+  };
+
+  let wrapApplyAllButton = (container) => {
+    if (container.find('.sw_addfilem_sharedbuttons').length > 0) {
+      return;
+    }
+
+    $('#layout-main div.addfilem.form #applytoall').wrap('<div class="sw_addfilem_addons sw_addfilem_sharedbuttons"></div>');
+  };
+
+  let bindButtonClicks = (container, date) => {
+    container.on('click', 'tbody button.sw_addfilem_todaybtn', singleFileTodayBtnClickHandler);
+    container.on('click', 'tbody button.sw_addfilem_nyaabtn', singleFileNyaaBtnClickHandler);
+    container.on('click', 'tfoot button.sw_addfilem_todaybtn', allFilesTodayBtnClickHandler);
+    container.on('click', 'tfoot button.sw_addfilem_nyaabtn', allFilesNyaaBtnClickHandler);
+  };
+
   bindButtonClicks(container, dateStr);
-  
+
   let observer = new MutationObserver((mutations, observer) => {
     insertButtons(container);
+    wrapApplyAllButton(container);
   });
 
   observer.observe(container[0], {

@@ -5,16 +5,16 @@ few years.
 
 # How to use
 
-First, install the relevant Greasemonkey compatible user script add-on for your browser
-([Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/) itself for Firefox,
-[the Greasemonkey fork](https://github.com/janekptacijarabaci/greasemonkey/releases) for [Pale Moon](https://www.palemoon.org/),
-or [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
-for most other browsers). After that, you can install a script in here by clicking its name, then clicking
-"Raw" on the right. The add-on manager should then prompt you to verify you want to install the script and provide a
-way to review the code to be sure of its authenticity. Once a script is installed, you don't need to do anything else
-yourself – the script will run on the page it is designed for and do its thing automatically.
+First, install Tampermonkey (e.g. [for Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
+or [for Firefox](https://addons.mozilla.org/en-GB/firefox/addon/tampermonkey/)). After that, you can install a
+script in here by clicking its name, then clicking "Raw" on the right. The add-on manager should then prompt you 
+to verify you want to install the script and provide a way to review the code to be sure of its authenticity. 
+Once a script is installed, you don't need to do anything else yourself – the script will run on the pages it 
+is designed for and do its thing automatically.
 
-**Greasemonkey 4 is not supported for now; maybe in the future. ([#10](https://github.com/soulweaver91/anidb-user-scripts/issues/10))**
+User script add-ons other than Tampermonkey may or may not work. Specifically, for Greasemonkey, only versions up
+to the latest 3.x series release will work. Greasemonkey 4, the only available option for modern Firefox versions,
+**will not work** due to breaking changes introduced in it that don't appear to become remedied any time soon.
 
 # Commit tag legend
 

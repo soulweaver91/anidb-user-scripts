@@ -13,7 +13,7 @@ Once a script is installed, you don't need to do anything else yourself – the 
 is designed for and do its thing automatically.
 
 User script add-ons other than Tampermonkey may or may not work. Specifically, for Greasemonkey, only versions up
-to the latest 3.x series release will work. Greasemonkey 4, the only available option for modern Firefox versions,
+to the latest 3.x series release will work. Greasemonkey 4, the only available GM version for modern Firefox versions,
 **will not work** due to breaking changes introduced in it that don't appear to become remedied any time soon.
 
 # Commit tag legend
@@ -25,6 +25,7 @@ respectively:
 | Tag             | Script                                                                |
 | :---            | :---                                                                  |
 | \[ProgBars\]    | `AniDB_Achievement_Progress_Bars.user.js`                             |
+| \[CmtCreq\]     | `AniDB_Extended_Comment_Creqs.user.js`                                |
 | \[TodayBtn\]    | `AniDB_Mass_Add_Files_Today_Button.user.js`                           |
 | \[DonutGraph\]  | `AniDB_Stats_Votes_as_Donut_Graph.user.js`                            |
 | \[TLNumFinish\] | `AniDB_Timeline_Numbering_by_Finished_Date.user.js`                   |

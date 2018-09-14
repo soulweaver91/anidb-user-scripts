@@ -29,7 +29,7 @@
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagentityrel(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagname(&|$)/
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @version     2018.09.14
+// @version     2018.09.15
 // @grant       GM_addStyle
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
@@ -296,7 +296,7 @@ const _$ = window.$.noConflict();
 
   // Add mod only missing links (forum post type)
   if (['club', 'cmt', 'userpage'].indexOf(mode) !== -1) {
-    $('.comment').each((i, post) => {
+    $('.cmt_entries .comment').each((i, post) => {
       const actions = $(post).find('.actions');
       const reportButton = actions.find('.i_comment_report');
       if (reportButton.length > 0 && !DEBUG_MOD_ITEMS) {

@@ -26,6 +26,7 @@ respectively:
 | :---            | :---                                                                  |
 | \[ProgBars\]    | `AniDB_Achievement_Progress_Bars.user.js`                             |
 | \[CmtCreq\]     | `AniDB_Extended_Comment_Creqs.user.js`                                |
+| \[MassExt\]     | `AniDB_File_Massedit_Extensions.user.js`                              |
 | \[TodayBtn\]    | `AniDB_Mass_Add_Files_Today_Button.user.js`                           |
 | \[DonutGraph\]  | `AniDB_Stats_Votes_as_Donut_Graph.user.js`                            |
 | \[TLNumFinish\] | `AniDB_Timeline_Numbering_by_Finished_Date.user.js`                   |

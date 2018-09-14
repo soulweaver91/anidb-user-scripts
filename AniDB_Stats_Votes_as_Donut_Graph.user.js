@@ -4,12 +4,13 @@
 // @description Replaces the bar representation of anime votes with a donut graph
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage&(.*&|)do=stats(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)do=stats&(.*&|)show=userpage(&|$)/
-// @version     2017.06.12
+// @version     2018.09.14
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Stats_Votes_as_Donut_Graph.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Stats_Votes_as_Donut_Graph.user.js
+// @run-at      document-idle
 //
-// Copyright (c) 2017 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2017–2018 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -32,16 +33,14 @@
 //
 // ==/UserScript==
 
-((AniDB, $) => {  
+const script = (AniDB, $) => {
   if (!AniDB || !AniDB.Chart || !AniDB.Chart.drawDonut || !$) {
-    console.error("Failed to load votes as donut graph script!");
-    console.log(AniDB, !!AniDB ? AniDB.Chart : null, (!!AniDB && !!AniDB.Chart) ? AniDB.Chart.drawDonut : null, $);
-    return;
+    throw 'uninit';
   }
-  
+
   const oldGraphContainer = $('.g_section.charts div').eq(0);
   const newGraphContainerId = 'swAnimeVotesChart';
-  
+
   // Old color scheme
   /* const voteColours = [
     "FF0000",
@@ -55,7 +54,7 @@
     "5CDC00",
     "00FF00"
   ]; */
-  
+
   // New, slightly more eye friendly color scheme (no more neon green!)
   const voteColours = [
     "D71313",
@@ -69,12 +68,12 @@
     "52C815",
     "15BC15"
   ];
-  
+
   if (oldGraphContainer.length === 0) {
     console.error("did not find the old graph");
     return;
   }
-  
+
   // Add the needed stylesheet using jQuery.
   // There is a GreaseMonkey native function for this (GM_addStyle) but if @grant is anything but none,
   // the jQuery obtained from unsafeWindow breaks (specifically, cannot handle $(...).each() anymore),
@@ -92,7 +91,7 @@
     }
     </style>`
   );
-  
+
   let drawDonutChart = (data) => {
     try {
       AniDB.Chart.drawDonut(`#${newGraphContainerId} .container`, data);
@@ -100,33 +99,33 @@
       console.error(e);
     }
   };
-  
+
   let scrapeVoteData = () => {
     let voteBuckets = new Array(10);
     let voteCountElems = oldGraphContainer.find('.column .header.count');
-    
+
     // length 11 = the cell that says "Count" + the 10 bars
     if (voteCountElems.length !== 11) {
       console.error("failed to locate vote counts correctly");
       console.log(voteCountElems);
       return null;
     }
-    
+
     for (let i = 1; i < 11; ++i) {
       voteBuckets[i - 1] = {
         name: Math.max(1, i - 0.50).toFixed(2) + '–' + Math.min(10, i + 0.49).toFixed(2),
         y: parseInt(voteCountElems[i].innerHTML)
-        
+
         // Setting the colors within the data appears to not work when colors are defined by CSS.
         // Thus, we need to embed our own stylesheet to fix these colors instead.
         // This fact doesn't appear to be stated at http://api.highcharts.com/highcharts/series%3Cpie%3E.data.color - fun times.
         // color: "#" + voteColours[i - 1]
       };
     }
-    
+
     return voteBuckets;
   };
-  
+
   let appendGraphContainerToDom = (votes) => {
     oldGraphContainer.after(`
       <div class="g_bubble graph sw_injected_graph" 
@@ -136,7 +135,7 @@
       </div>
     `)
   };
-  
+
   let removeOldGraphContainer = () => {
     oldGraphContainer.remove();
   };
@@ -145,8 +144,40 @@
   if (!votes) {
     return;
   }
-  
+
   appendGraphContainerToDom(votes);
   removeOldGraphContainer();
   drawDonutChart(votes);
-})(window.AniDB, window.$ || window.jQuery);
+};
+
+
+// Async scripting environment + page resources compatibility boilerplate
+let retries = 0;
+const initializer = (pageDepsGetter) => {
+  const failPath = () => {
+    retries++;
+    if (retries < 10) {
+      setTimeout(() => initializer(pageDepsGetter), 100);
+    } else {
+      console.error(`The script ${GM.info.script.name} couldn't load correctly!`);
+    }
+  };
+
+  const pageDeps = typeof pageDepsGetter === 'function' ? pageDepsGetter() : [];
+  if (pageDeps && pageDeps.some((dep) => dep === undefined)) {
+    return failPath();
+  }
+
+  try {
+    script(...pageDeps);
+  } catch (e) {
+    if (e === 'uninit') {
+      return failPath();
+    } else {
+      console.error(`An error occurred in the script ${GM.info.script.name}!`);
+      console.error(e);
+    }
+  }
+};
+
+initializer(() => [window.AniDB, window.$ || window.jQuery]);

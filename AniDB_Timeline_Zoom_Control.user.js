@@ -3,12 +3,13 @@
 // @namespace   SoulweaverScript
 // @description Adds a zoom control to a user's timeline
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=timeline(&|$)/
-// @version     2017.06.12
+// @version     2018.09.14
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Zoom_Control.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Zoom_Control.user.js
+// @run-at      document-idle
 //
-// Copyright (c) 2017 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2017–2018 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -31,20 +32,18 @@
 //
 // ==/UserScript==
 
-(($) => {
+const script = ($) => {
   if (!$) {
-    console.error("Failed to load timeline zoom control script!");
-    console.log($);
-    return;
+    throw 'uninit';
   }
-  
+
   let timelineArea = $('.g_section.timeline > .g_timeline');
-  
+
   if (timelineArea.length === 0) {
     console.error("Failed to locate the timeline container!");
     return;
   }
-  
+
   $('head link[title="Style"]').after(`<style type="text/css" id="sw_timeline_zoom_style">
   #sw_timeline_zoom {
     position: fixed;
@@ -105,7 +104,7 @@
   }
   </style>`);
 
-  
+
   let annotateTimelineItems = () => {
     timelineArea.find('> ul > li').each((idx, e) => {
       let elem = $(e);
@@ -113,16 +112,16 @@
       elem.data('sw-timeline-zoom-offset-units', (!isNaN(margin) ? margin / 5 : null));
       elem.data('sw-timeline-zoom-width-units', e.clientWidth / 5);
     });
-    
+
     timelineArea.data('sw-timeline-zoom-factor', 5);
   };
-  
+
   let setupVerticalLabelElems = () => {
     timelineArea.find('> ul.legend > li span').each((idx, e) => {
       $(e).append(`<div class="verticallabel">${$(e).text()}</span>`);
     });
   };
-  
+
   let scaleItems = (factor) => {
     timelineArea.find('> ul > li').each((idx, e) => {
       let elem = $(e);
@@ -134,13 +133,13 @@
       }
     });
   };
-  
+
   let repositionView = (factor) => {
     let positionUnits = (timelineArea[0].scrollLeft + (timelineArea[0].clientWidth / 2)) / timelineArea.data('sw-timeline-zoom-factor');
     timelineArea[0].scrollLeft = positionUnits * factor - (timelineArea[0].clientWidth / 2);
     timelineArea.data('sw-timeline-zoom-factor', factor);
   };
-  
+
   let setVerticalLabels = (factor) => {
     if (factor < 4) {
       timelineArea.find('.legend').addClass('sw_timeline_verticallabels');
@@ -148,7 +147,7 @@
       timelineArea.find('.legend').removeClass('sw_timeline_verticallabels');
     }
   };
-  
+
   let scaleFactorChanged = (e) => {
     let factor = e.target.value;
     scaleItems(factor);
@@ -158,7 +157,7 @@
     $('#sw_timeline_zoom_value').text(factor);
     $('#sw_timeline_zoom_plural').css({ display: ((factor == 1) ? 'none' : 'inline') });
   };
-  
+
   let injectZoomControl = () => {
     timelineArea.append(`
       <div id="sw_timeline_zoom" class="g_bubble">
@@ -171,11 +170,43 @@
         </span></div>
       </div>
     `);
-    
+
     timelineArea.on('change', '#sw_timeline_zoom', scaleFactorChanged);
   };
-  
+
   annotateTimelineItems();
   setupVerticalLabelElems();
   injectZoomControl();
-})(window.$ || window.jQuery);
+};
+
+
+// Async scripting environment + page resources compatibility boilerplate
+let retries = 0;
+const initializer = (pageDepsGetter) => {
+  const failPath = () => {
+    retries++;
+    if (retries < 10) {
+      setTimeout(() => initializer(pageDepsGetter), 100);
+    } else {
+      console.error(`The script ${GM.info.script.name} couldn't load correctly!`);
+    }
+  };
+
+  const pageDeps = typeof pageDepsGetter === 'function' ? pageDepsGetter() : [];
+  if (pageDeps && pageDeps.some((dep) => dep === undefined)) {
+    return failPath();
+  }
+
+  try {
+    script(...pageDeps);
+  } catch (e) {
+    if (e === 'uninit') {
+      return failPath();
+    } else {
+      console.error(`An error occurred in the script ${GM.info.script.name}!`);
+      console.error(e);
+    }
+  }
+};
+
+initializer(() => [window.$ || window.jQuery]);

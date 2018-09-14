@@ -3,12 +3,13 @@
 // @namespace   SoulweaverScript
 // @description Prepends timeline items of all series with numbers based on the starting order
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=timeline(&|$)/
-// @version     2017.06.12
+// @version     2018.09.14
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Numbering_by_Started_Date.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Numbering_by_Started_Date.user.js
+// @run-at      document-idle
 //
-// Copyright (c) 2015-2017 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2015–2018 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -31,13 +32,11 @@
 //
 // ==/UserScript==
 
-(($) => {
+const script = ($) => {
   if (!$) {
-    console.error("Failed to load timeline items numbering script!");
-    console.log($);
-    return;
+    throw 'uninit';
   }
-    
+
   let completedSeries = $('.g_timeline li .mylist');
   if (completedSeries.length === 0) {
     // nothing to do
@@ -57,4 +56,36 @@
     link.prepend(`<span class="sw_timeline_count_started">#${i + 1} </span>`);
     link.attr('title', `#${i + 1} ${link.attr('title')}`);
   });
-})(window.$ || window.jQuery);
+};
+
+
+// Async scripting environment + page resources compatibility boilerplate
+let retries = 0;
+const initializer = (pageDepsGetter) => {
+  const failPath = () => {
+    retries++;
+    if (retries < 10) {
+      setTimeout(() => initializer(pageDepsGetter), 100);
+    } else {
+      console.error(`The script ${GM.info.script.name} couldn't load correctly!`);
+    }
+  };
+
+  const pageDeps = typeof pageDepsGetter === 'function' ? pageDepsGetter() : [];
+  if (pageDeps && pageDeps.some((dep) => dep === undefined)) {
+    return failPath();
+  }
+
+  try {
+    script(...pageDeps);
+  } catch (e) {
+    if (e === 'uninit') {
+      return failPath();
+    } else {
+      console.error(`An error occurred in the script ${GM.info.script.name}!`);
+      console.error(e);
+    }
+  }
+};
+
+initializer(() => [window.$ || window.jQuery]);

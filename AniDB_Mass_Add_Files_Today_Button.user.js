@@ -3,11 +3,12 @@
 // @namespace   SoulweaverScript
 // @description Adds shortcut buttons to speed up adding data in the file mass add form
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addfilem(&|$)/
-// @version     2018.07.09
+// @version     2018.09.14
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Mass_Add_Files_Today_Button.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Mass_Add_Files_Today_Button.user.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js
+// @run-at      document-idle
 //
 // Copyright (c) 2017–2018 Soulweaver <soulweaver@hotmail.fi>
 //
@@ -32,11 +33,9 @@
 //
 // ==/UserScript==
 
-(($) => {
+const script = ($) => {
   if (!$) {
-    console.error("Failed to load the today button script!");
-    console.log($);
-    return;
+    throw 'uninit';
   }
 
   const ISO_DATE = 'YYYY-MM-DD';
@@ -189,4 +188,36 @@
     subtree: true,
     childList: true
   });
-})(window.$ || window.jQuery);
+};
+
+
+// Async scripting environment + page resources compatibility boilerplate
+let retries = 0;
+const initializer = (pageDepsGetter) => {
+  const failPath = () => {
+    retries++;
+    if (retries < 10) {
+      setTimeout(() => initializer(pageDepsGetter), 100);
+    } else {
+      console.error(`The script ${GM.info.script.name} couldn't load correctly!`);
+    }
+  };
+
+  const pageDeps = typeof pageDepsGetter === 'function' ? pageDepsGetter() : [];
+  if (pageDeps && pageDeps.some((dep) => dep === undefined)) {
+    return failPath();
+  }
+
+  try {
+    script(...pageDeps);
+  } catch (e) {
+    if (e === 'uninit') {
+      return failPath();
+    } else {
+      console.error(`An error occurred in the script ${GM.info.script.name}!`);
+      console.error(e);
+    }
+  }
+};
+
+initializer(() => [window.$ || window.jQuery]);

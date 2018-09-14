@@ -3,13 +3,14 @@
 // @namespace   SoulweaverScript
 // @description Replaces the basic image based badges on AniDB user pages with progress bars for easier tracking
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
-// @version     2018.03.04
+// @version     2018.09.14
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
+// @run-at      document-idle
 //
-// Copyright (c) 2012-2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2012–2018 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -34,11 +35,9 @@
 
 // TODO: Still needs a lot of cleanup and logic simplification.
 
-(($) => {
+const script = ($) => {
   if (!$) {
-    console.error("Failed to load achievement progress bars script!");
-    console.log($);
-    return;
+    throw 'uninit';
   }
 
   if ($('.achievements').length === 0) {
@@ -330,26 +329,26 @@
     wrapped.find('*').remove();
     return wrapped.html().trim();
   };
-  
+
   let updateCollapsedClassStatus = () => {
-      if (($('.achievements > .g_bubblewrap > .container h3:not(.swebb_condensed)').not('.swebb_badges-orig div.swebb_badgebox h3')).length === 0) {
-        $('.g_section.achievements').addClass('swebb_no-expanded-sections');
-      } else {
-        $('.g_section.achievements').removeClass('swebb_no-expanded-sections');
-      }
-      
-      if (($('.achievements > .g_bubblewrap > .container h3.swebb_condensed').not('.swebb_badges-orig div.swebb_badgebox h3')).length > 0) {
-        $('.g_section.achievements').addClass('swebb_has-collapsed-sections');
-      } else {
-        $('.g_section.achievements').removeClass('swebb_has-collapsed-sections');
-      }
+    if (($('.achievements > .g_bubblewrap > .container h3:not(.swebb_condensed)').not('.swebb_badges-orig div.swebb_badgebox h3')).length === 0) {
+      $('.g_section.achievements').addClass('swebb_no-expanded-sections');
+    } else {
+      $('.g_section.achievements').removeClass('swebb_no-expanded-sections');
+    }
+
+    if (($('.achievements > .g_bubblewrap > .container h3.swebb_condensed').not('.swebb_badges-orig div.swebb_badgebox h3')).length > 0) {
+      $('.g_section.achievements').addClass('swebb_has-collapsed-sections');
+    } else {
+      $('.g_section.achievements').removeClass('swebb_has-collapsed-sections');
+    }
   }
 
   let bindCollapseEvents = () => {
     $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
       $(this).next().slideToggle('fast');
       $(this).toggleClass("swebb_condensed");
-      
+
       updateCollapsedClassStatus();
 
       let sectionKey = $(this).parent().data('categoryKey');
@@ -381,7 +380,7 @@
       }
     });
   };
-  
+
   let setExpandPreferenceClass = (preferExpand) => {
     if (preferExpand) {
       $('.g_section.achievements').addClass('swebb_prefer-expand');
@@ -508,7 +507,7 @@
       e.preventDefault();
       showSettingsDialog();
     });
-    
+
     $('.swebb_all-expand-button').click(function(e) {
       e.preventDefault();
       $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').each(function() {
@@ -520,11 +519,11 @@
           settings.openedSections.push(sectionKey);
         }
       });
-      
+
       saveSettings();
       $('.g_section.achievements').removeClass('swebb_no-expanded-sections').removeClass('swebb_has-collapsed-sections');
     });
-    
+
     $('.swebb_all-collapse-button').click(function(e) {
       e.preventDefault();
       $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').each(function() {
@@ -532,7 +531,7 @@
         $(this).addClass("swebb_condensed");
 
       });
-      
+
       settings.openedSections = [];
       saveSettings();
       $('.g_section.achievements').addClass('swebb_no-expanded-sections').addClass('swebb_has-collapsed-sections');
@@ -1340,8 +1339,8 @@
             </div>`, badge.link)}<div
             class="swebb_badge-bar${isMax ? " swebb_max" : ""}">
                <div class="swebb_bar" style="width: ${levelPercentage * 200}px;">&nbsp;${settings.displayOverallProgressStrip
-                  ? `<div class="swebb_bar_overall">${tierMarkers}<div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
-                  : ''}</div>
+          ? `<div class="swebb_bar_overall">${tierMarkers}<div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
+          : ''}</div>
                <span class="swebb_badgetopic">${linkify(badge.name + (badge.copyOriginalName ? `: ${badgeDescription}` : ''), badge.link)}</span>
                ${levelStartValue ? `<span class="swebb_prevlv">${formatter(levelStartValue)}</span>` : ''}
                ${levelEndValue ? `<span class="swebb_nextlv">${formatter(levelEndValue)}</span>` : ''}
@@ -1366,4 +1365,36 @@
   insertSettingsButtonSection();
   setExpandPreferenceClass(settings.preferExpandOverCollapse);
   updateCollapsedClassStatus();
-})(window.$ || window.jQuery);
+};
+
+
+// Async scripting environment + page resources compatibility boilerplate
+let retries = 0;
+const initializer = (pageDepsGetter) => {
+  const failPath = () => {
+    retries++;
+    if (retries < 10) {
+      setTimeout(() => initializer(pageDepsGetter), 100);
+    } else {
+      console.error(`The script ${GM.info.script.name} couldn't load correctly!`);
+    }
+  };
+
+  const pageDeps = typeof pageDepsGetter === 'function' ? pageDepsGetter() : [];
+  if (pageDeps && pageDeps.some((dep) => dep === undefined)) {
+    return failPath();
+  }
+
+  try {
+    script(...pageDeps);
+  } catch (e) {
+    if (e === 'uninit') {
+      return failPath();
+    } else {
+      console.error(`An error occurred in the script ${GM.info.script.name}!`);
+      console.error(e);
+    }
+  }
+};
+
+initializer(() => [window.$ || window.jQuery]);

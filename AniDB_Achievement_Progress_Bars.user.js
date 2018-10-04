@@ -3,7 +3,7 @@
 // @namespace   SoulweaverScript
 // @description Replaces the basic image based badges on AniDB user pages with progress bars for easier tracking
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
-// @version     2018.09.14
+// @version     2018.10.04
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
@@ -95,14 +95,14 @@ const script = ($) => {
     position: relative;
     text-align: right;
   }
-  
+
   .swebb_badge-bar-container > a,
   .swebb_badge-bar-container > .badge {
     position: absolute;
     left: -10px;
     top: -10px;
   }
-  
+
   .swebb_badge-bar {
     font-size: 8pt;
     width: 200px;
@@ -210,7 +210,7 @@ const script = ($) => {
     transform: scale(1);
     z-index: 1;
   }
-  
+
   .swebb_has-bars-section div.badge.one-time,
   .swebb_has-bars-section div.badge.special,
   .swebb_has-bars-section div.badge.mod {
@@ -224,7 +224,7 @@ const script = ($) => {
   .swebb_badges-orig {
     margin-top: 0.5em;
   }
-  
+
   /* Style specific definitions start here */
   .swebb_badge-bar,
   span.swebb_badge-bar-icon {
@@ -252,7 +252,7 @@ const script = ($) => {
   .swebb_bar_overall-tier-marker {
     border-right: 1px solid rgba(0,0,0,0.5);
   }
-  
+
   span.swebb_prevlv,
   span.swebb_nextlv,
   span.swebb_progress {
@@ -298,13 +298,13 @@ const script = ($) => {
   };
 
   let normalizedAge = (daysFloat) => {
-    var days = Math.floor(daysFloat);
-    var hours = Math.round(daysFloat - days);
+    let days = Math.floor(daysFloat);
+    let hours = Math.round(daysFloat - days);
     // here's room for improvement, leap day handling is subpar
-    var years = Math.floor(days / 365.25);
+    let years = Math.floor(days / 365.25);
     days = Math.round(days % 365.25 + hours);
     if (days >= 365) { days = 0; years += 1; }
-    var years = (years > 0) ? years + "y " : "";
+    years = (years > 0) ? years + "y " : "";
     return years + days + "d ";
   };
 
@@ -342,7 +342,7 @@ const script = ($) => {
     } else {
       $('.g_section.achievements').removeClass('swebb_has-collapsed-sections');
     }
-  }
+  };
 
   let bindCollapseEvents = () => {
     $('.achievements > .g_bubblewrap > .container h3').not('.swebb_badges-orig div.swebb_badgebox h3').click(function() {
@@ -387,7 +387,7 @@ const script = ($) => {
     } else {
       $('.g_section.achievements').addClass('swebb_prefer-collapse');
     }
-  }
+  };
 
   let dashify = (str) => {
     return str
@@ -1045,7 +1045,7 @@ const script = ($) => {
       badges: [
         {
           selector: '.creativity',
-          name: 'Contributed creative content',
+          name: 'Creative content contributor',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true,
@@ -1053,11 +1053,18 @@ const script = ($) => {
         },
         {
           selector: '.code',
-          name: 'Contributed code',
+          name: 'Code contributor',
           tiers: null,
           currentValueGetter: () => null,
           hidden: true,
           copyOriginalName: true
+        },
+        {
+          selector: '.patreon',
+          name: 'Patreon supporter',
+          tiers: null,
+          currentValueGetter: () => null,
+          hidden: true
         },
         {
           selector: '.boardgame.germany-2013-10',
@@ -1313,8 +1320,8 @@ const script = ($) => {
         }
 
         // Set the default bar percentage to 100% for badges that don't have a clear progression.
-        levelPercentage = 1;
-        overallPercentage = 1;
+        let levelPercentage = 1;
+        let overallPercentage = 1;
         if (levelStartValue !== null && levelEndValue !== null && currentLevel < tiers.length) {
           levelPercentage = Math.max(0, Math.min(1, (currentValue - levelStartValue) / (levelEndValue - levelStartValue)));
         }

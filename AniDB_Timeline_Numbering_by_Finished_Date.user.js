@@ -3,7 +3,7 @@
 // @namespace   SoulweaverScript
 // @description Prepends timeline items of finished series with numbers based on the finishing order
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=timeline(&|$)/
-// @version     2018.09.14
+// @version     2018.10.14
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Numbering_by_Finished_Date.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Numbering_by_Finished_Date.user.js
@@ -42,6 +42,8 @@ const script = ($) => {
     // nothing to do
     return;
   }
+
+  localStorage.setItem('swTimelineScriptMigration_finishedScript', 'true');
 
   let pairs = completedSeries.map((i, el) => {
     return {

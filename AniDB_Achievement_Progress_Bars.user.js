@@ -3,7 +3,7 @@
 // @namespace   SoulweaverScript
 // @description Replaces the basic image based badges on AniDB user pages with progress bars for easier tracking
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
-// @version     2018.10.04
+// @version     2018.10.13
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
@@ -300,7 +300,10 @@ const script = ($) => {
   let normalizedAge = (daysFloat) => {
     let days = Math.floor(daysFloat);
     let hours = Math.round(daysFloat - days);
-    // here's room for improvement, leap day handling is subpar
+
+    // This could be calculated with moment, but the second values for the boundaries are
+    // actually not accurate to the day, so we'd end up with ugly almost-full years instead.
+    // This will give us neater results.
     let years = Math.floor(days / 365.25);
     days = Math.round(days % 365.25 + hours);
     if (days >= 365) { days = 0; years += 1; }

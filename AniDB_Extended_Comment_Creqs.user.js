@@ -15,6 +15,7 @@
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=tag(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcharanimerel(&|$)/
+// @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcharcharrel(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcreatoranimerel(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcreatorcreatorrel(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcreatorsongrel(&|$)/
@@ -29,7 +30,7 @@
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagentityrel(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagname(&|$)/
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @version     2018.09.15
+// @version     2018.10.13
 // @grant       GM_addStyle
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
@@ -190,6 +191,9 @@ const _$ = window.$.noConflict();
       });
       break;
     }
+    case 'addcharcharrel':
+      parseTableTypePage('.addcharcharrel_entries', /[?&]addccrel.sid=(\d+)/i, 'charcharreltb');
+      break;
     case 'addcreatoranimerel':
       parseTableTypePage('.pane.current .creatorlist', /[?&]addcarel.sid=(\d+)/i, 'creatoranimereltb');
       break;

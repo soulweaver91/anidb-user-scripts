@@ -3,7 +3,7 @@
 // @namespace   SoulweaverScript
 // @description Extends the capabilities of the file massedit where allowed by the backend
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=group(&|$)/
-// @version     2018.09.14
+// @version     2018.10.13
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_File_Massedit_Extensions.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_File_Massedit_Extensions.user.js
@@ -44,7 +44,7 @@ const script = ($) => {
 
   const highestTracks = files.toArray().reduce((res, el) => {
     res.audio = Math.max(res.audio, $(el).find('.icons .i_icon[title^="audio | "]').length);
-    res.sub = Math.max(res.sub, $(el).find('.icons .i_icon[title^="subtitle | "]').length);
+    res.sub = Math.max(res.sub, $(el).find('.icons .i_icon[title^="subtitle | "], .icons .i_icon[title^="sub | "]').length);
 
     return res;
   }, {

@@ -1064,7 +1064,8 @@ const script = ($) => {
           name: 'Patreon supporter',
           tiers: null,
           currentValueGetter: () => null,
-          hidden: true
+          hidden: true,
+          copyOriginalNameIfNotEqual: "Supported AniDB through the Patreon campaign"
         },
         {
           selector: '.boardgame.germany-2013-10',
@@ -1338,6 +1339,12 @@ const script = ($) => {
           }
         }
 
+        let badgeText = badge.name;
+        if (badge.copyOriginalName ||
+          (typeof badge.copyOriginalNameIfNotEqual === 'string' && badge.copyOriginalNameIfNotEqual !== badgeDescription)) {
+          badgeText += `: ${badgeDescription}`;
+        }
+
         obtainedContainer.append(`<div class="swebb_obtained-badge swebb_badge-bar-container" title="${badgeTitleText}">
             ${linkify(`<div class="${badgeClassStr} swebb_badge-small">
               <div class="inner">
@@ -1348,7 +1355,7 @@ const script = ($) => {
                <div class="swebb_bar" style="width: ${levelPercentage * 200}px;">&nbsp;${settings.displayOverallProgressStrip
           ? `<div class="swebb_bar_overall">${tierMarkers}<div class="bar" style="width: ${overallPercentage * 200}px;">&nbsp;</div></div>`
           : ''}</div>
-               <span class="swebb_badgetopic">${linkify(badge.name + (badge.copyOriginalName ? `: ${badgeDescription}` : ''), badge.link)}</span>
+               <span class="swebb_badgetopic">${linkify(badgeText, badge.link)}</span>
                ${levelStartValue ? `<span class="swebb_prevlv">${formatter(levelStartValue)}</span>` : ''}
                ${levelEndValue ? `<span class="swebb_nextlv">${formatter(levelEndValue)}</span>` : ''}
                <span class="swebb_current">

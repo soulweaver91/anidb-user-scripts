@@ -1217,7 +1217,7 @@ const script = ($) => {
     }
   ];
   const romanNumerals = ["-", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-  const badgeTitleMatcher = /^([^\(\[$]+)\s*(?:\((\d+)+ of (\d+)\))?(?:\s*\[Level (\d) achieved on: (\d{2}.\d{2}.\d{4}|\d{4}-\d{2}-\d{2})\])?$/i;
+  const badgeTitleMatcher = /^(.+?)\s*(?:|(?:\((\d+)+ of (\d+)\))?(?:\s*\[Level (\d) achieved on: (\d{2}.\d{2}.\d{4}|\d{4}-\d{2}-\d{2})\])?)$/i;
 
   wrapOriginalViewBlock();
   badgeList.forEach((category) => {

@@ -30,7 +30,7 @@
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagentityrel(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagname(&|$)/
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @version     2018.10.13
+// @version     2018.12.28
 // @grant       GM_addStyle
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
@@ -200,15 +200,41 @@ const _$ = window.$.noConflict();
     case 'addcharcharrel':
       parseTableTypePage('.addcharcharrel_entries', /[?&]addccrel.sid=(\d+)/i, 'charcharreltb');
       break;
-    case 'addcreatoranimerel':
-      parseTableTypePage('.pane.current .creatorlist', /[?&]addcarel.sid=(\d+)/i, 'creatoranimereltb');
+    case 'addcreatoranimerel': {
+      const items = $(`.pane.current .creatorlist tr`);
+
+      items.each((i, item) => {
+        const actionCol = $(item).find('td.action');
+
+        const historyLink = actionCol.find('.i_general_history');
+        const editLink = actionCol.find('.i_general_edit, .i_general_edit_request');
+        const idMatch = (historyLink && historyLink.attr('href') || '').match(/[?&]id=(\d+)/i);
+        const tableMatch = (historyLink && historyLink.attr('href') || '').match(/[?&]table=([a-z]+tb)/i);
+        if (idMatch && tableMatch) {
+          editLink.after(makeTableTypeButton(tableMatch[1], idMatch[1]));
+        }
+      });
       break;
+    }
     case 'addcreatorcreatorrel':
       parseTableTypePage('.addcreatorcreatorrel_entries', /[?&]addccrel.sid=(\d+)/i, 'creatorcreatorreltb');
       break;
-    case 'addcreatorsongrel':
-      parseTableTypePage('.addcreatorsongrel_entries', /[?&]addcarel.sid=(\d+)/i, 'creatorsongreltb');
+    case 'addcreatorsongrel': {
+      const items = $(`.addcreatorsongrel_entries tr`);
+
+      items.each((i, item) => {
+        const actionCol = $(item).find('td.action');
+
+        const historyLink = actionCol.find('.i_general_history');
+        const editLink = actionCol.find('.i_general_edit, .i_general_edit_request');
+        const idMatch = (historyLink && historyLink.attr('href') || '').match(/[?&]id=(\d+)/i);
+        const tableMatch = (historyLink && historyLink.attr('href') || '').match(/[?&]table=([a-z]+tb)/i);
+        if (idMatch && tableMatch) {
+          editLink.after(makeTableTypeButton(tableMatch[1], idMatch[1]));
+        }
+      });
       break;
+    }
     case 'addeptitle':
       parseTableTypePage('.addeptitle_list', /[?&]do.edit=(\d+)/i, 'eptitletb');
       break;

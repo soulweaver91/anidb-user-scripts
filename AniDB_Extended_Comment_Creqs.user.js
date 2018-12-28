@@ -72,6 +72,11 @@ const _$ = window.$.noConflict();
 
   // Add the needed stylesheet using jQuery.
   $('head link[title="Style"]').after(`<style type="text/css" id="swecc_style">
+  /* Default style width doesn't fit four icons */
+  #layout-main div.file_all .action.icons {
+    width: 8em;
+  }
+
   #layout-main div.edit_actions span.swecc_report > *::before {
     content: "\\f06a";
     font-weight: 900;
@@ -102,6 +107,7 @@ const _$ = window.$.noConflict();
     </a>`;
   };
 
+  // Unused, possibly to be removed
   const makePlainTypeLink = (table, id) => {
     return ` <a class="swecc_report" href="${makeCmtCreqURL(table, id)}">report</a>`;
   };
@@ -140,7 +146,7 @@ const _$ = window.$.noConflict();
         const tableMatch = (historyLink && historyLink.attr('href') || '').match(/[?&]table=([a-z]+tb)/i);
 
         if (idMatch && tableMatch) {
-          const html = makePlainTypeLink(tableMatch[1], idMatch[1]);
+          const html = makeTableTypeButton(tableMatch[1], idMatch[1]);
           if (editLink.length > 0) {
             editLink.after(html);
           } else {

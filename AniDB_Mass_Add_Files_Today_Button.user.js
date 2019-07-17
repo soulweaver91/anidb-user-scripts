@@ -3,14 +3,15 @@
 // @namespace   SoulweaverScript
 // @description Adds shortcut buttons to speed up adding data in the file mass add form
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addfilem(&|$)/
-// @version     2018.09.14
+// @include     /^https?://anidb\.net/anime/\d+/release($|/add)/
+// @version     2019.07.17
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Mass_Add_Files_Today_Button.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Mass_Add_Files_Today_Button.user.js
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js
 // @run-at      document-idle
 //
-// Copyright (c) 2017–2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2017–2019 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the

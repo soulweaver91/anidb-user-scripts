@@ -3,13 +3,15 @@
 // @namespace   SoulweaverScript
 // @description Extends the capabilities of the file massedit where allowed by the backend
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=group(&|$)/
-// @version     2018.10.13
+// @include     /^https?://anidb.net/group/\d+/anime/\d+/release/
+// @include     /^https?://anidb.net/group/release/\d+/
+// @version     2019.07.17
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_File_Massedit_Extensions.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_File_Massedit_Extensions.user.js
 // @run-at      document-idle
 //
-// Copyright (c) 2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2018–2019 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the

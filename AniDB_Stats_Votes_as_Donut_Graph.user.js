@@ -4,13 +4,14 @@
 // @description Replaces the bar representation of anime votes with a donut graph
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage&(.*&|)do=stats(&|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)do=stats&(.*&|)show=userpage(&|$)/
-// @version     2018.09.14
+// @include     /^https?://anidb\.net/user(/\d+)?/statistic/
+// @version     2019.07.17
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Stats_Votes_as_Donut_Graph.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Stats_Votes_as_Donut_Graph.user.js
 // @run-at      document-idle
 //
-// Copyright (c) 2017–2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2017–2019 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the

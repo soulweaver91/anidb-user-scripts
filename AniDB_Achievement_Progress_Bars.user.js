@@ -3,14 +3,16 @@
 // @namespace   SoulweaverScript
 // @description Replaces the basic image based badges on AniDB user pages with progress bars for easier tracking
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
-// @version     2018.10.13
+// @include     /^https?://anidb\.net/user/\d+(/profile)?/
+// @include     /^https?://anidb\.net/user/profile/
+// @version     2019.07.17
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Achievement_Progress_Bars.user.js
 // @run-at      document-idle
 //
-// Copyright (c) 2012–2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2012–2019 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the

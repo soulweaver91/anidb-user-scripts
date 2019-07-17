@@ -3,40 +3,70 @@
 // @namespace   SoulweaverScript
 // @description Adds comment-creqing capabilities to various additional entity pages
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=anime(&|$)/
+// @include     /^https?://anidb\.net/anime/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=character(&|$)/
+// @include     /^https?://anidb\.net/character/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=club(&|$)/
+// @include     /^https?://anidb\.net/club/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=collection(&|$)/
+// @include     /^https?://anidb\.net/collection/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=cmt(&|$)/
+// @include     /^https?://anidb\.net/forum/thread/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=creator(&|$)/
+// @include     /^https?://anidb\.net/creator/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=ep(&|$)/
+// @include     /^https?://anidb\.net/episode/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=file(&|$)/
+// @include     /^https?://anidb\.net/file/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=group(&|$)/
+// @include     /^https?://anidb\.net/group/\d+(?|/$|$)/
+// @include     /^https?://anidb\.net/group/\d+/anime/\d+/release(?|/$|$)/
+// @include     /^https?://anidb\.net/group/release/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=song(&|$)/
+// @include     /^https?://anidb\.net/song/\d+(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=tag(&|$)/
+// @include     /^https?://anidb\.net/tag/\d+(?|/$|\w+tb|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=userpage(&|$)/
+// @include     /^https?://anidb\.net/user/\d+(?|/$|/profile|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcharanimerel(&|$)/
+// @include     /^https?://anidb\.net/anime/\d+/character(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcharcharrel(&|$)/
+// @include     /^https?://anidb\.net/character/\d+/relation(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcreatoranimerel(&|$)/
+// @include     /^https?://anidb\.net/anime/\d+/creator(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcreatorcreatorrel(&|$)/
+// @include     /^https?://anidb\.net/creator/\d+/relation(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addcreatorsongrel(&|$)/
+// @include     /^https?://anidb\.net/song/\d+/creator(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addeptitle(&|$)/
+// @include     /^https?://anidb\.net/episode/\d+/name(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addgroupgroup(&|$)/
+// @include     /^https?://anidb\.net/group/\d+/relation(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addname(&|$)/
+// @include     /^https?://anidb\.net/\w+/\d+/name(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addresource(&|$)/
+// @include     /^https?://anidb\.net/\w+/\d+/resource(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addseq(&|$)/
+// @include     /^https?://anidb\.net/anime/\d+/relation(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addsonganimerel(&|$)/
+// @include     /^https?://anidb\.net/song/\d+/anime(?|/$|$)/
+// @include     /^https?://anidb\.net/anime/\d+/song(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addsongcollectionrel(&|$)/
+// @include     /^https?://anidb\.net/song/\d+/collection(?|/$|$)/
+// @include     /^https?://anidb\.net/collection/\d+/song(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addsongsongrel(&|$)/
+// @include     /^https?://anidb\.net/song/\d+/relation(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagentityrel(&|$)/
+// @include     /^https?://anidb\.net/\w+/\d+/tag(?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagname(&|$)/
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @version     2018.12.28
+// @version     2019.07.17
 // @grant       GM_addStyle
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
 // @run-at      document-idle
 //
-// Copyright (c) 2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2018–2019 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
@@ -93,7 +123,7 @@ const _$ = window.$.noConflict();
   }
   </style>`);
 
-  const makeCmtCreqURL = (table, id) => `animedb.pl?show=creq&creq.cmt=1&tb=${table}&id=${id}`;
+  const makeCmtCreqURL = (table, id) => `/perl-bin/animedb.pl?show=creq&creq.cmt=1&tb=${table}&id=${id}`;
 
   const makeSpanTypeButton = (table, id) => {
     return `<span class="swecc_report">
@@ -130,7 +160,7 @@ const _$ = window.$.noConflict();
     $(el).find('> *:nth-child(2n+1)').addClass('g_odd');
   }
 
-  const query = new URLSearchParams(location.search);
+  const query = new URLSearchParams(new URL($('meta#anidb-url').data('anidb-url')).search);
   const mode = query.get('show');
 
   // Add completely missing links

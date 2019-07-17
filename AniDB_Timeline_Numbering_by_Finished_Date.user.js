@@ -3,13 +3,14 @@
 // @namespace   SoulweaverScript
 // @description Prepends timeline items of finished series with numbers based on the finishing order
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=timeline(&|$)/
-// @version     2018.10.14
+// @include     /^https?://anidb\.net/user(/\d+)?/timeline/
+// @version     2019.07.17
 // @grant       none
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Numbering_by_Finished_Date.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Timeline_Numbering_by_Finished_Date.user.js
 // @run-at      document-idle
 //
-// Copyright (c) 2015–2018 Soulweaver <soulweaver@hotmail.fi>
+// Copyright (c) 2015–2019 Soulweaver <soulweaver@hotmail.fi>
 //
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the

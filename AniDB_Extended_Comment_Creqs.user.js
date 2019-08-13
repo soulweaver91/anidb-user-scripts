@@ -60,7 +60,7 @@
 // @include     /^https?://anidb\.net/\w+/\d+/tag(\?|/$|$)/
 // @include     /^https?://anidb\.net/perl-bin/animedb\.pl\?(|.*&)show=addtagname(&|$)/
 // @require     https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js
-// @version     2019.07.18
+// @version     2019.08.14
 // @grant       GM_addStyle
 // @updateURL   https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
 // @downloadURL https://github.com/soulweaver91/anidb-user-scripts/raw/master/AniDB_Extended_Comment_Creqs.user.js
@@ -193,7 +193,7 @@ const _$ = window.$.noConflict();
       }
 
       const editLink = $('.g_section.info .edit_actions .modify a').attr('href');
-      const idMatch = (editLink || '').match(/[?&]agid=(\d+)/i);
+      const idMatch = (editLink || '').match(/release\/(\d+)\/edit/i);
       if (idMatch) {
         $('.g_section.info .edit_actions .modify').before(makeSpanTypeButton('animegrouptb', idMatch[1]));
       }
